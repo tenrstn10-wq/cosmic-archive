@@ -1,531 +1,1045 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spotify Lyrics - Special for You</title>
-    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <title>Give Me Your Forever - Cosmic Archive</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body { 
-            font-family: 'Montserrat', sans-serif; 
-            color: #fff; 
-            height: 100vh;
-            overflow-y: scroll;
-            scroll-snap-type: y mandatory;
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500&display=swap');
+
+        :root {
+            --bg-color-1: #120e1f;
+            --bg-color-2: #09060f;
+            --text-main: #e2e0ea;
+            --text-muted: #9490a5;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-color-1), var(--bg-color-2));
+            background-attachment: fixed;
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 20px 20px 120px 20px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            box-sizing: border-box;
             position: relative;
-            background-color: #121212;
-            scroll-behavior: smooth;
+            overflow-x: hidden;
+            transition: background 0.8s ease;
         }
 
-        .page-bg {
-            position: fixed;
-            top: -20%; left: -20%; right: -20%; bottom: -20%;
-            background-image: var(--bg-source);
-            background-size: cover;
-            background-position: center;
-            filter: blur(70px) brightness(0.55) saturate(1.5);
-            transform: scale(1.3);
-            z-index: -2;
-        }
-
-        body::after {
+        body::before {
             content: '';
             position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.35);
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 30%, var(--bg-color-1), transparent 60%),
+                        radial-gradient(circle at 70% 70%, var(--bg-color-2), transparent 70%);
+            filter: blur(80px);
+            opacity: 0.85;
             z-index: -1;
+            transition: background 0.8s ease;
         }
 
-        .page-screen {
-            width: 100%;
-            height: 100vh;
-            scroll-snap-align: start;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
-            padding: 35px 20px;
-        }
-
-        .hero-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            gap: 15px;
-            width: 100%;
-        }
-
-        .square-album-img {
-            width: 240px;
-            height: 240px;
-            border-radius: 20px;
-            object-fit: cover;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .album-title {
-            font-size: 22px;
-            font-weight: 800;
-            text-shadow: 0 2px 8px rgba(0,0,0,0.5);
-        }
-
-        .album-artist {
-            font-size: 15px;
-            color: rgba(255, 255, 255, 0.75);
-            font-weight: 600;
-        }
-
-        .bottom-area-hero {
-            width: 100%;
-            max-width: 340px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            margin-bottom: 15px;
-        }
-
-        .bottom-area-content {
-            width: 100%;
-            max-width: 340px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            margin-bottom: 30px;
-        }
-
-        .minimal-player-centered {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .spotify-progress {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.25);
-            height: 4px;
-            border-radius: 3px;
-            cursor: pointer;
-            position: relative;
-            overflow: visible;
-        }
-
-        .progress-bar-fill {
-            background: #ffffff;
-            width: 0%;
-            height: 100%;
-            border-radius: 3px;
-            position: relative;
-            transition: width 0.1s linear;
-        }
-
-        .progress-bar-fill::after {
-            content: '';
-            position: absolute;
-            right: -5px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 10px;
-            height: 10px;
-            background: #ffffff;
-            border-radius: 50%;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.4);
-        }
-
-        .time-and-play-row {
-            display: grid;
-            grid-template-columns: 1fr auto 1fr;
-            align-items: center;
-            font-size: 11px;
-            opacity: 0.8;
-            font-weight: 600;
-            width: 100%;
-        }
-
-        .currentTimeClass {
-            text-align: left;
-        }
-
-        .totalTimeClass {
-            text-align: right;
-        }
-
-        .btn-play-center {
-            background: #ffffff;
-            color: #121212;
-            border: none;
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            transition: transform 0.2s;
-            margin: 0 auto;
-        }
-
-        .btn-play-center i.fa-play {
-            transform: translateX(1px);
-        }
-
-        .btn-play-center:active { transform: scale(0.9); }
-
-        .toggle-container {
-            display: flex;
-            gap: 12px;
-            width: 100%;
-        }
-
-        .toggle-btn {
-            flex: 1;
-            background: rgba(255, 255, 255, 0.12);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.85);
-            padding: 11px 15px;
-            border-radius: 25px;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
-        }
-
-        .toggle-btn.active {
-            background: #ffffff;
-            color: #121212;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            font-weight: 700;
-        }
-
-        .content-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+        .site-wrapper {
             max-width: 400px;
             width: 100%;
-            text-align: center;
-            padding: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .screen-container {
+            display: flex;
+            width: 200%;
+            transform: translateX(-50%);
+            transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        .screen-container.show-cosmic {
+            transform: translateX(0);
+        }
+
+        .app-container, .cosmic-screen {
+            width: 50%;
+            box-sizing: border-box;
+            flex-shrink: 0;
+        }
+
+        /* Halaman Kosmik di sebelah Kiri dengan Mode Scroll ke Bawah */
+        .cosmic-screen {
+            padding-right: 5px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            max-height: calc(100vh - 130px);
             overflow-y: auto;
+            padding-bottom: 40px;
+        }
+        .cosmic-screen::-webkit-scrollbar {
+            width: 4px;
+        }
+        .cosmic-screen::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
         }
 
-        .section-prompt {
-            font-size: 13px;
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.75);
-            margin-bottom: 15px;
-            letter-spacing: 0.3px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-            display: none;
+        /* Halaman Utama di sebelah Kanan */
+        .app-container {
+            padding-left: 5px;
         }
 
-        .section-prompt.active {
-            display: block;
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 25px;
+            color: var(--text-muted);
         }
-
-        .lyrics-scroll-box {
-            max-height: 250px;
-            overflow-y: auto;
-            width: 100%;
-            padding: 10px 0;
-            scroll-behavior: smooth;
-            display: none;
+        .top-bar-left {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: color 0.2s;
         }
-
-        .lyrics-scroll-box.active {
-            display: block;
-        }
-
-        .lyrics-scroll-box::-webkit-scrollbar {
-            display: none;
-        }
-
-        .lyric-line {
-            font-size: 18px;
-            font-weight: 700;
-            color: rgba(255, 255, 255, 0.4);
-            margin: 16px 0;
-            transition: all 0.3s ease;
-            text-shadow: 0 2px 8px rgba(0,0,0,0.4);
-        }
-
-        .lyric-line.active {
+        .top-bar-left:hover {
             color: #ffffff;
-            font-size: 22px;
-            text-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
+        }
+
+        .top-bar-right {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 6px 14px;
+            border-radius: 20px;
+            color: var(--text-main);
+            font-size: 0.65rem;
+            letter-spacing: 0.08em;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .top-bar-right:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            transform: scale(1.02);
+        }
+        .top-bar-right:active {
+            transform: scale(0.98);
+        }
+
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 5px;
+        }
+        .sub-header {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.2rem;
+            line-height: 0.95;
+            margin: 0 0 10px 0;
+            color: #ffffff;
+            font-weight: 400;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        h1:hover {
+            opacity: 0.8;
+            text-decoration: underline dotted;
+        }
+        .artist {
+            font-size: 0.8rem;
+            letter-spacing: 0.25em;
+            margin-bottom: 25px;
+            color: var(--text-main);
+            cursor: pointer;
+            width: fit-content;
+        }
+        .artist:hover {
+            opacity: 0.8;
+            text-decoration: underline dotted;
+        }
+        .album-box {
+            width: 100px;
+            height: 100px;
+            background: #1f182c;
+            border: 1px solid rgba(255,255,255,0.15);
+            position: relative;
+            flex-shrink: 0;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+            cursor: pointer;
+        }
+        .album-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .album-badge {
+            position: absolute;
+            bottom: 6px;
+            right: 6px;
+            background: rgba(18, 14, 31, 0.85);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: #fff;
+        }
+        .track-meta {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+        .time-display {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+            color: var(--text-main);
+        }
+        .tabs {
+            display: flex;
+            background: rgba(255,255,255,0.06);
+            padding: 3px;
+            border-radius: 25px;
+            width: fit-content;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        .tab-btn {
+            padding: 6px 16px;
+            border: none;
+            border-radius: 20px;
+            background: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.7rem;
+            transition: all 0.2s;
+        }
+        .tab-btn.active {
+            background: rgba(255,255,255,0.15);
+            color: #ffffff;
+        }
+        .lyrics-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            position: relative;
+        }
+        .lyric-item {
+            margin-bottom: 25px;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.15rem;
+            line-height: 1.4;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.25s ease;
+            opacity: 0.5;
+        }
+        .lyric-item:hover {
+            color: var(--text-main);
+            opacity: 0.8;
+        }
+        .lyric-item.active-lyric {
+            color: #ffffff;
+            font-weight: 700;
+            opacity: 1;
+            transform: scale(1.02) translateX(5px);
+        }
+
+        /* Styling Halaman Kosmik */
+        .cosmic-back-bar {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 20px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .cosmic-back-bar:hover {
+            color: #ffffff;
+        }
+        .cosmic-main-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            color: #ffffff;
+            margin-bottom: 4px;
+            font-weight: 400;
+        }
+        .cosmic-sub-title {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 20px;
+        }
+
+        /* Gaya Kartu Akordion Universal */
+        .accordion-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 18px;
+            padding: 16px;
+            text-align: left;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .accordion-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+        .accordion-header {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-main);
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .accordion-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.77, 0, 0.175, 1), margin-top 0.3s ease;
+            margin-top: 0;
+        }
+        .accordion-card.active .accordion-body {
+            max-height: 800px;
+            margin-top: 12px;
+        }
+        .accordion-content-block {
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+        .accordion-subtitle {
+            font-size: 0.62rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #ffc2d1;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+        .accordion-text {
+            font-size: 0.82rem;
+            color: #ffffff;
+            line-height: 1.6;
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 8px;
+        }
+
+        /* Kartu Spesial Interstellar di Paling Bawah */
+        .special-guest-card {
+            background: linear-gradient(135deg, rgba(255, 194, 209, 0.12), rgba(138, 43, 226, 0.12));
+            border: 1px solid rgba(255, 194, 209, 0.4);
+            border-radius: 18px;
+            padding: 16px;
+            text-align: left;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(138, 43, 226, 0.15);
+        }
+        .special-guest-card:hover {
+            border-color: rgba(255, 194, 209, 0.8);
+            box-shadow: 0 8px 25px rgba(255, 194, 209, 0.25);
+        }
+        .special-guest-header {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: #ffc2d1;
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .special-guest-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.77, 0, 0.175, 1), margin-top 0.3s ease;
+            margin-top: 0;
+        }
+        .special-guest-card.active .special-guest-body {
+            max-height: 600px;
+            margin-top: 12px;
+        }
+
+        /* Footer Pemutar Musik */
+        .player-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(to top, var(--bg-color-2) 60%, rgba(0, 0, 0, 0.1) 100%);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 15px 20px 18px 20px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            box-sizing: border-box;
+            z-index: 10;
+            transition: background 0.8s ease;
+        }
+        .player-inner {
+            max-width: 400px;
+            margin: auto;
+        }
+        .player-controls-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+        .play-btn {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 50%;
+            width: 42px;
+            height: 42px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 13px;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        .play-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
             transform: scale(1.05);
         }
-
-        .message-text {
-            font-family: 'Caveat', cursive;
-            font-size: 24px;
-            line-height: 1.5;
-            color: #ffffff;
-            text-shadow: 0 2px 8px rgba(0,0,0,0.6);
-            max-height: 260px;
-            overflow-y: auto;
-            padding: 0 10px;
-            display: none;
+        .play-btn:active {
+            transform: scale(0.95);
         }
-
-        .message-text.active {
-            display: block;
+        .track-progress-info {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
+            flex-grow: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            cursor: pointer;
+        }
+        .track-progress-info:hover {
+            color: #ffffff;
+            text-decoration: underline dotted;
+        }
+        .time-counter {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            flex-shrink: 0;
+        }
+        .progress-bar-container {
+            height: 3px;
+            background: rgba(255,255,255,0.1);
+            width: 100%;
+            cursor: pointer;
+            position: relative;
+            margin-bottom: 10px;
+            border-radius: 2px;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: #a8a0bc;
+            position: relative;
+            border-radius: 2px;
+            transition: width 0.1s linear;
+        }
+        .player-sub-text {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.58rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .player-sub-text span {
+            cursor: pointer;
         }
     </style>
 </head>
-<body id="pageBody">
+<body>
 
-    <div class="page-bg" id="pageBg"></div>
+<audio id="audio-player" src="musik.mp3"></audio>
+<audio id="interstellar-player" src="interstellar.mp3" loop></audio>
 
-    <audio id="myAudio" src="musik.mp3"></audio>
+<input type="file" id="image-upload" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
+<input type="file" id="audio-upload" accept="audio/*" style="display: none;" onchange="handleAudioUpload(event)">
 
-    <!-- PAGE 1 (Main) -->
-    <div class="page-screen">
-        <div></div>
-        <div class="hero-content">
-            <img src="album1.jpg" alt="Album Art" class="square-album-img" id="mainAlbumImg">
-            <div>
-                <div class="album-title">Give Me Your Forever</div>
-                <div class="album-artist">Sza</div>
+<div class="site-wrapper">
+    <div class="screen-container" id="screen-slider">
+        
+        <!-- HALAMAN ARSIP KOSMIK BERBASIS AKORDION -->
+        <div class="cosmic-screen">
+            <div class="cosmic-back-bar" onclick="showMainScreen()">
+                <span>&#8592;</span> KEMBALI KE MENU UTAMA
             </div>
-        </div>
-
-        <div class="bottom-area-hero">
-            <div class="minimal-player-centered">
-                <div class="spotify-progress progressContainerClass" onclick="seekAudio(event)">
-                    <div class="progress-bar-fill progressBarClass"></div>
-                </div>
-                <div class="time-and-play-row">
-                    <span class="currentTimeClass">0:00</span>
-                    <button class="btn-play-center playBtnClass" onclick="togglePlay()">
-                        <i class="fa-solid fa-play playIconClass"></i>
-                    </button>
-                    <span class="totalTimeClass">4:04</span>
-                </div>
-            </div>
-
-            <div class="toggle-container">
-                <button class="toggle-btn" id="btnLirikHero" onclick="switchTab('lyrics')">Song Lyrics</button>
-                <button class="toggle-btn" id="btnPesanHero" onclick="switchTab('message')">Message</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- PAGE 2 (Lyrics / Message) -->
-    <div class="page-screen" id="pageTwo">
-        <div></div>
-        <div class="content-container" id="swipeArea">
-            <div class="section-prompt" id="sectionPrompt"></div>
             
-            <div class="lyrics-scroll-box" id="lyricsBox"></div>
-            <div class="message-text" id="messageText"></div>
-        </div>
+            <div class="cosmic-main-title">Cosmic Archive</div>
+            <div class="cosmic-sub-title">Alam Semesta & Teknologi Penjelajahan</div>
 
-        <div class="bottom-area-content">
-            <div class="minimal-player-centered">
-                <div class="spotify-progress progressContainerClass" onclick="seekAudio(event)">
-                    <div class="progress-bar-fill progressBarClass"></div>
+            <div id="accordion-list"></div>
+
+            <!-- KARTU SPESIAL INTERSTELLAR -->
+            <div class="special-guest-card" id="special-card" onclick="toggleAccordion('special-card')">
+                <div class="special-guest-header">
+                    <span>✨ Special Guest: Kisah Interstellar & Makna Cinta</span>
+                    <span class="icon">&#9662;</span>
                 </div>
-                <div class="time-and-play-row">
-                    <span class="currentTimeClass">0:00</span>
-                    <button class="btn-play-center playBtnClass" onclick="togglePlay()">
-                        <i class="fa-solid fa-play playIconClass"></i>
-                    </button>
-                    <span class="totalTimeClass">4:04</span>
+                <div class="special-guest-body">
+                    <div class="accordion-content-block" style="border-top: 1px solid rgba(255, 194, 209, 0.2);">
+                        <div class="accordion-subtitle">Sinopsis & Perjalanan Kosmik</div>
+                        <div class="accordion-text"><i>Interstellar</i> menceritakan kisah Cooper, seorang mantan pilot NASA yang harus meninggalkan bumi dan anak perempuannya, Murph, demi menjalani misi penjelajahan menembus lubang cacing (wormhole) untuk mencari rumah baru bagi umat manusia di galaksi lain.</div>
+                    </div>
+                    <div class="accordion-content-block">
+                        <div class="accordion-subtitle">Filosofi Utama: Cinta Melintasi Dimensi</div>
+                        <div class="accordion-text">Di balik teori fisika kuantum, relativitas waktu, dan lubang hitam (Gargantua), film ini menyampaikan pesan paling emosional: bahwa <b>cinta adalah satu-satunya hal yang mampu melampaui batasan ruang dan waktu</b>. Sejauh apa pun jarak memisahkan, ikatan hati yang tulus tidak akan pernah hilang.</div>
+                    </div>
                 </div>
             </div>
         </div>
+
+        <!-- HALAMAN UTAMA -->
+        <div class="app-container">
+            <div class="top-bar">
+                <div class="top-bar-left" onclick="showCosmicScreen()">
+                    <span>&#9776;</span> COSMIC ARCHIVE
+                </div>
+                <div class="top-bar-right" onclick="openWhatsApp()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="color: #25D366; flex-shrink: 0;">
+                        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+                    </svg>
+                    CONTACT ME!
+                </div>
+            </div>
+
+            <div class="header-section">
+                <div>
+                    <div class="sub-header">PRIVATE FREQUENCY</div>
+                    <h1 id="editable-title" onclick="editTitle()" title="Klik untuk edit judul">Give Me Your<br>Forever</h1>
+                </div>
+                <div class="album-box" onclick="document.getElementById('image-upload').click()" title="Klik untuk ganti foto album">
+                    <img id="album-img" src="album.jpg" alt="Album Art" crossorigin="anonymous">
+                    <div class="album-badge">&#9835;</div>
+                </div>
+            </div>
+
+            <div class="artist" id="editable-artist" onclick="editArtist()" title="Klik untuk edit nama artis">SZA</div>
+
+            <div class="track-meta">FILE // 001 - UNKNOWN</div>
+            <div class="time-display" id="main-timer">00:00</div>
+
+            <div class="tabs">
+                <button class="tab-btn active" id="btn-lyrics" onclick="switchTab('lyrics')">Lyrics</button>
+                <button class="tab-btn" id="btn-edit" onclick="switchTab('edit')">Edit Lyrics</button>
+                <button class="tab-btn" id="btn-message" onclick="switchTab('message')">Message</button>
+            </div>
+
+            <div class="lyrics-container-wrapper" id="content-container">
+                <ul class="lyrics-list" id="lyrics-list-el">
+                    <li class="lyric-item active-lyric" data-time="0" onclick="jumpToTime(0)">Oh baby, I was there watching wishing you to be mine</li>
+                    <li class="lyric-item" data-time="5.5" onclick="jumpToTime(5.5)">I want you to know</li>
+                    <li class="lyric-item" data-time="8.5" onclick="jumpToTime(8.5)">I love you the most</li>
+                    <li class="lyric-item" data-time="12" onclick="jumpToTime(12)">I'll always be there right by your side</li>
+                    <li class="lyric-item" data-time="18.5" onclick="jumpToTime(18.5)">'Cause baby, you're always in my mind</li>
+                    <li class="lyric-item" data-time="22" onclick="jumpToTime(22)">Just give me your forever (give me your forever)</li>
+                </ul>
+            </div>
+        </div>
+
     </div>
+</div>
+
+<div class="player-footer">
+    <div class="player-inner">
+        <div class="player-controls-row">
+            <button class="play-btn" id="play-pause-btn" onclick="togglePlay()">&#9654;</button>
+            <div class="track-progress-info" id="audio-file-label" onclick="document.getElementById('audio-upload').click()" title="Klik untuk ganti file lagu (MP3)">GIVE ME YOUR FOREVER / SZA</div>
+            <div class="time-counter" id="duration-counter">0:00/0:27</div>
+        </div>
+        <div class="progress-bar-container" id="progress-container" onclick="seekAudio(event)">
+            <div class="progress-bar-fill" id="progress-fill"></div>
+        </div>
+        <div class="player-sub-text">
+            <span>CREATED BY: MASTEN</span>
+            <span>COSMIC ARCHIVE 2026</span>
+        </div>
+    </div>
+</div>
 
 <script>
-    const mainAlbumImg = document.getElementById('mainAlbumImg');
-    const pageBody = document.getElementById('pageBody');
-    const pageTwo = document.getElementById('pageTwo');
-    const sectionPrompt = document.getElementById('sectionPrompt');
-    const lyricsBox = document.getElementById('lyricsBox');
-    const messageText = document.getElementById('messageText');
-    const btnPesanHero = document.getElementById('btnPesanHero');
-    const btnLirikHero = document.getElementById('btnLirikHero');
+    const audio = document.getElementById('audio-player');
+    const interstellarAudio = document.getElementById('interstellar-player');
+    const playBtn = document.getElementById('play-pause-btn');
+    const progressFill = document.getElementById('progress-fill');
+    const mainTimer = document.getElementById('main-timer');
+    const durationCounter = document.getElementById('duration-counter');
+    const albumImg = document.getElementById('album-img');
 
-    const textPesan = "@𝒂𝒎𝒂𝒏𝒅𝒂♡: a song that always reminds me of him, but just to remember the memories, there is no implied hope of getting back together ☺️";
-    
-    const timedLyrics = [
-        { time: 1, text: "Oh baby, I was there watching wishing you to be mine" },
-        { time: 7, text: "I want you to know" },
-        { time: 9, text: "I love you the most" },
+    let isCosmicPlaying = false;
+    let defaultLyrics = [
+        { time: 0, text: "Oh baby, I was there watching wishing you to be mine" },
+        { time: 5.5, text: "I want you to know" },
+        { time: 8.5, text: "I love you the most" },
         { time: 12, text: "I'll always be there right by your side" },
-        { time: 16, text: "'Cause baby, you're always in my mind" },
-        { time: 21, text: "Just give me your forever (give me your forever)" }
+        { time: 18.5, text: "'Cause baby, you're always in my mind" },
+        { time: 22, text: "Just give me your forever (give me your forever)" }
     ];
 
-    let currentTab = 'lyrics';
+    const cosmicDatabase = [
+        { id: "BimaSakti", name: "Galaksi Bima Sakti (Milky Way)", title1: "Profil Galaksi Bima Sakti", title2: "Fakta Ilmiah & Pusat Galaksi", desc1: "Galaksi Bima Sakti (Milky Way) adalah galaksi spiral berbatang tempat sistem tata surya kita berada. Garis tengahnya diperkirakan mencapai sekitar 100.000 hingga 200.000 tahun cahaya, menampung lebih dari 100 miliar bintang.", desc2: "Di jantung Bima Sakti bersemayam lubang hitam supermasif bernama Sagittarius A*. Tata surya kita membutuhkan waktu sekitar 230 juta tahun untuk menyelesaikan satu putaran penuh mengelilingi pusat galaksi ini." },
+        { id: "Andromeda", name: "Galaksi Andromeda (M31)", title1: "Profil Galaksi Andromeda", title2: "Tabrakan Kosmik Masa Depan", desc1: "Galaksi Andromeda (M31) adalah galaksi spiral terdekat dari Bima Sakti, berjarak sekitar 2,5 juta tahun cahaya. Andromeda mengandung sekitar satu triliun bintang, menjadikannya lebih besar daripada Bima Sakti.", desc2: "Berdasarkan pengamatan gravitasi, galaksi Andromeda dan Bima Sakti sedang bergerak mendekati satu sama lain dengan kecepatan tinggi, dan diprediksi akan mengalami tabrakan agung membentuk galaksi baru dalam 4 miliar tahun ke depan." },
+        { id: "TataSurya", name: "Sistem Tata Surya", title1: "Profil Sistem Tata Surya", title2: "Batas & Struktur Gravitasi", desc1: "Tata surya terbentuk sekitar 4,6 miliar tahun lalu dari keruntuhan gravitasi awan molekul raksasa. Sistem ini terdiri dari Matahari sebagai pusat, delapan planet, puluhan bulan, asteroid, komet, serta sabuk Kuiper.", desc2: "Batas terluar pengaruh gravitasi Matahari disebut Awan Oort, yang membentang hingga ribuan tahun cahaya ke dalam ruang antarbintang, menjadi tempat bersemayamnya komet-komet purba." },
+        { id: "Matahari", name: "Bintang Induk: Matahari", title1: "Profil Bintang Induk (Matahari)", title2: "Reaksi Fusi Nuklir & Energi", desc1: "Matahari adalah bintang deret utama tipe G yang memegang 99,8% massa seluruh tata surya. Inti matahari membakar hidrogen menjadi helium melalui proses fusi nuklir yang sangat masif.", desc2: "Setiap detik, Matahari mengubah sekitar 600 juta ton hidrogen menjadi helium, memancarkan energi cahaya dan panas yang menempuh waktu 8 menit 20 detik untuk sampai ke permukaan Bumi." },
+        { id: "Merkurius", name: "Planet Merkurius", title1: "Profil Planet Merkurius", title2: "Suhu Ekstrem & Kawah Tubrukan", desc1: "Merkurius adalah planet terkecil di tata surya sekaligus yang paling dekat dengan Matahari. Permukaannya dipenuhi kawah meteoroid karena planet ini tidak memiliki lapisan atmosfer yang tebal.", desc2: "Karena rotasinya yang sangat lambat, perbedaan suhu di Merkurius adalah yang paling ekstrem di tata surya: mencapai 430 derajat Celsius di sisi siang hari dan turun hingga -180 derajat Celsius di malam hari." },
+        { id: "Venus", name: "Planet Venus", title1: "Profil Planet Venus", title2: "Efek Rumah Kaca & Atmosfer", desc1: "Venus adalah planet kedua dari Matahari yang sering dijuluki sebagai kembaran Bumi karena ukurannya yang mirip. Namun, kondisi permukaannya sangat berbeda jauh.", desc2: "Venus adalah planet terpanas di tata surya dengan suhu mencapai 465 derajat Celsius akibat terperangkapnya panas oleh atmosfer tebal karbon dioksida dan awan asam sulfat yang pekat." },
+        { id: "Bumi", name: "Planet Bumi", title1: "Profil Planet Bumi", title2: "Kehidupan & Medan Magnet", desc1: "Bumi adalah planet ketiga dari Matahari dan satu-satunya dunia di alam semesta yang terbukti menopang kehidupan. Sekitar 71% permukaan Bumi ditutupi oleh samudera air cair.", desc2: "Atmosfer yang kaya oksigen serta keberadaan medan magnet global yang kuat melindungi permukaan Bumi dari terjangan radiasi kosmik berbahaya dan angin matahari secara langsung." },
+        { id: "Mars", name: "Planet Mars", title1: "Profil Planet Mars", title2: "Gunung Tertinggi & Air Purba", desc1: "Mars adalah planet keempat, dikenal sebagai planet merah karena tingginya kandungan besi oksida (karat) di permukaannya. Mars memiliki ngarai raksasa Valles Marineris yang membentang sangat panjang.", desc2: "Di Mars terdapat Olympus Mons, gunung berapi tertinggi di tata surya yang tingginya hampir tiga kali Gunung Everest. Bukti geologis menunjukkan Mars purba dulunya memiliki sungai dan danau." },
+        { id: "Jupiter", name: "Planet Jupiter", title1: "Profil Planet Jupiter", title2: "Raksasa Gas & Bintik Merah", desc1: "Jupiter adalah planet terbesar di tata surya dengan massa lebih dari dua kali gabungan seluruh planet lainnya. Planet ini tersusun sebagian besar dari gas hidrogen dan helium.", desc2: "Ciri khas Jupiter adalah Bintik Merah Raksasa, sebuah badai badai antisiklon raksasa yang sudah mengamuk selama ratusan tahun, berukuran cukup besar untuk menelan planet Bumi." },
+        { id: "Saturnus", name: "Planet Saturnus", title1: "Profil Planet Saturnus", title2: "Cincin Es & Massa Jenis", desc1: "Saturnus adalah planet keenam, terkenal karena sistem cincin es spektakuler yang mengitarinya. Cincin ini terdiri dari miliaran pecahan es murni dan batuan kecil.", desc2: "Saturnus memiliki massa jenis yang sangat rendah; jika Anda memiliki wadah air yang cukup luas, planet Saturnus akan mengapung di atas air tanpa tenggelam." },
+        { id: "Uranus", name: "Planet Uranus", title1: "Profil Planet Uranus", title2: "Rotasi Miring & Raksasa Es", desc1: "Uranus adalah raksasa es ketujuh dari Matahari dengan atmosfer kaya metana yang memberikan warna biru kehijauan yang khas serta dingin yang membekukan.", desc2: "Keunikan ekstrem Uranus adalah sumbu rotasinya yang miring hingga hampir 98 derajat, membuat planet ini seolah-olah berputar menggelinding mengelilingi Matahari." },
+        { id: "Neptunus", name: "Planet Neptunus", title1: "Profil Planet Neptunus", title2: "Angin Supersonik & Jarak Terjauh", desc1: "Neptunus adalah planet terjauh di tata surya utama. Planet es raksasa ini memiliki warna biru tua yang pekat dan dikelilingi oleh badai angin tercepat di tata surya.", desc2: "Kecepatan angin di Neptunus dapat mencapai lebih dari 2.000 kilometer per jam, meniupkan badai metana beku melintasi seluruh permukaan planet yang sunyi ini." },
+        { id: "Supernova", name: "Supernova (Ledakan Bintang)", title1: "Profil Ledakan Supernova", title2: "Kelahiran Unsur Berat", desc1: "Supernova adalah ledakan kolosal dari sebuah bintang masif di akhir siklus hidupnya. Dalam beberapa hari, ledakan ini memancarkan energi setara dengan cahaya milyaran bintang.", desc2: "Seluruh unsur kimia berat di alam semesta, termasuk emas dan besi di dalam darah manusia, tercipta dari inti ledakan supernova. Manusia secara harfiah terbuat dari debu bintang." },
+        { id: "BlackHole", name: "Lubang Hitam (Black Hole)", title1: "Profil Lubang Hitam", title2: "Cakrawala Peristiwa & Gravitasi", desc1: "Lubang hitam adalah wilayah ruang angkasa dengan gravitasi begitu kuat sehingga tidak ada materi atau cahaya yang mampu melarikan diri setelah melewati batas tertentu.", desc2: "Batas terluar lubang hitam disebut cakrawala peristiwa. Di wilayah ini, hukum fisika konvensional runtuh dan alur waktu melambat secara ekstrem akibat tarikan massa tak terhingga." },
+        { id: "Nebula", name: "Nebula (Pabrik Bintang)", title1: "Profil Awan Nebula", title2: "Pabrik Kelahiran Bintang", desc1: "Nebula adalah awan raksasa di antariksa yang terdiri dari debu kosmik, gas hidrogen, helium, dan plasma terionisasi, membentang hingga puluhan tahun cahaya.", desc2: "Melalui proses gaya gravitasi selama jutaan tahun, gas di dalam nebula akan memadat dan memanas hingga memicu fusi nuklir, melahirkan bintang-bintang baru." },
+        { id: "Pulsar", name: "Bintang Pulsar & Magnetar", title1: "Profil Bintang Pulsar", title2: "Medan Magnet & Sinyal Radio", desc1: "Pulsar adalah bintang neutron yang berputar sangat cepat dan memancarkan radiasi elektromagnetik tajam dari kutubnya secara teratur seperti mercusuar kosmik.", desc2: "Meskipun ukurannya sekecil kota kecil, massa sebuah bintang pulsar jauh melampaui massa Matahari, menghasilkan medan magnet triliunan kali lebih kuat dari magnet Bumi." },
+        { id: "DarkMatter", name: "Materi Gelap & Energi Gelap", title1: "Profil Materi & Energi Gelap", title2: "Misteri Terbesar Kosmologi", desc1: "Materi gelap adalah komponen misterius yang diperkirakan menyusun sekitar 27% alam semesta, tidak memancarkan cahaya namun memiliki efek gravitasi yang menyatukan galaksi.", desc2: "Sementara itu, energi gelap mencakup 68% alam semesta dan bertindak sebagai tenaga pendorong yang menyebabkan ekspansi kosmos semakin cepat dari waktu ke waktu." },
+        { id: "Voyager", name: "Wahana Voyager 1 dan 2", title1: "Wahana Voyager 1 dan 2", title2: "Misi Antarbintang & Pesan Emas", desc1: "Diluncurkan NASA pada 1977, Voyager 1 dan 2 adalah objek buatan manusia terjauh dari Bumi. Voyager 1 kini telah resmi keluar dari tata surya menuju ruang antarbintang.", desc2: "Tujuan utamanya mempelajari planet luar, namun keduanya membawa piringan emas berisi rekaman suara bumi, musik, dan salam bahasa manusia untuk peradaban lain di masa depan." },
+        { id: "JWST", name: "Teleskop James Webb (JWST)", title1: "Teleskop Luar Angkasa James Webb", title2: "Melihat Galaksi Kuno Pertama", desc1: "JWST adalah teleskop inframerah tercanggih yang ditempatkan 1,5 juta kilometer dari Bumi, menggunakan cermin berlapis emas raksasa untuk menangkap cahaya kosmik terjauh.", desc2: "Tujuan utamanya adalah menembus tirai debu kosmik untuk mengamati galaksi-galaksi pertama yang lahir setelah peristiwa awal pembentukan alam semesta." },
+        { id: "Hubble", name: "Teleskop Luar Angkasa Hubble", title1: "Teleskop Luar Angkasa Hubble", title2: "Revolusi Citra Astronomi Modern", desc1: "Beroperasi di orbit rendah sejak 1990, teleskop Hubble berada di atas atmosfer bumi sehingga terbebas dari distorsi udara, menghasilkan foto kosmos beresolusi sangat tinggi.", desc2: "Tujuan utamanya adalah mengukur tingkat ekspansi alam semesta, menghitung usia kosmos, serta memotret detail nebula dan galaksi jauh secara konsisten." },
+        { id: "Perseverance", name: "Penjelajah Mars Perseverance", title1: "Penjelajah Mars Perseverance", title2: "Mencari Jejak Kehidupan Purba", desc1: "Perseverance adalah robot penjelajah canggih milik NASA yang mendarat di Kawah Jezero pada tahun 2021, dilengkapi instrumen sains modern dan helikopter mini Ingenuity.", desc2: "Tujuan utamanya adalah mencari tanda-tanda kehidupan mikroba masa lalu di Mars serta mengumpulkan sampel batuan terpilih untuk dibawa kembali ke Bumi." },
+        { id: "ISS", name: "Stasiun Luar Angkasa (ISS)", title1: "Stasiun Luar Angkasa Internasional", title2: "Laboratorium Sains Tanpa Bobot", desc1: "ISS adalah fasilitas riset ilmiah raksasa yang mengorbit Bumi di ketinggian 400 kilometer dengan kecepatan tinggi, dibangun atas kerja sama berbagai negara dunia.", desc2: "Tujuan utamanya adalah menjadi wadah bagi para astronot melakukan eksperimen sains dalam kondisi mikrogravitasi serta meneliti ketahanan tubuh manusia di luar angkasa." },
+        { id: "Parker", name: "Wahana Surya Parker", title1: "Wahana Surya Parker", title2: "Misi Mendekati Korona Matahari", desc1: "Parker Solar Probe adalah wahana tercepat buatan manusia yang dirancang dengan perisai panas tebal berbahan karbon untuk terbang langsung menembus atmosfer matahari.", desc2: "Tujuan utamanya adalah meneliti panas korona matahari serta aliran angin surya yang memicu badai magnetik dan berdampak langsung pada teknologi di Bumi." },
+        { id: "NewHorizons", name: "Wahana New Horizons (Pluto)", title1: "Wahana New Horizons", title2: "Menjelajahi Pluto & Sabuk Kuiper", desc1: "Diluncurkan pada 2006, New Horizons adalah wahana tercepat yang pernah meninggalkan orbit Bumi untuk menempuh perjalanan jauh menuju planet kerdil Pluto.", desc2: "Tujuan utamanya adalah memotret permukaan Pluto dari jarak dekat untuk pertama kalinya dalam sejarah serta meneliti objek-objek es terluar di Sabuk Kuiper." },
+        { id: "Cassini", name: "Misi Cassini-Huygens (Saturnus)", title1: "Misi Cassini-Huygens", title2: "Meneliti Saturnus & Bulan Enceladus", desc1: "Cassini adalah wahana pengorbit yang menginvestigasi sistem Saturnus selama bertahun-tahun, dilengkapi modul pendarat Huygens yang mendarat di bulan Titan.", desc2: "Tujuan utamanya adalah mengungkap struktur cincin Saturnus serta menemukan bukti adanya lautan air cair di bawah permukaan es bulan Enceladus." }
+    ];
+
+    window.addEventListener('DOMContentLoaded', () => {
+        if(localStorage.getItem('customTitle')) {
+            document.getElementById('editable-title').innerHTML = localStorage.getItem('customTitle');
+        }
+        if(localStorage.getItem('customArtist')) {
+            document.getElementById('editable-artist').innerText = localStorage.getItem('customArtist');
+        }
+        if(localStorage.getItem('customMessage')) {
+            window.savedMessage = localStorage.getItem('customMessage');
+        }
+        if(localStorage.getItem('customLyrics')) {
+            try {
+                defaultLyrics = JSON.parse(localStorage.getItem('customLyrics'));
+            } catch(e) {}
+        }
+        updatePlayerFooterLabel();
+        renderLyrics();
+        renderAccordionList();
+    });
+
+    function openWhatsApp() {
+        const phoneNumber = "6281461232770";
+        const message = "Hai! Saya melihat Cosmic Archive kamu, keren banget!";
+        window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, '_blank');
+    }
+
+    function renderAccordionList() {
+        const container = document.getElementById('accordion-list');
+        container.innerHTML = '';
+        cosmicDatabase.forEach((item, index) => {
+            const card = document.createElement('div');
+            card.className = 'accordion-card';
+            card.id = `card-${index}`;
+            card.onclick = () => toggleAccordion(`card-${index}`);
+            card.innerHTML = `
+                <div class="accordion-header">
+                    <span>${item.name}</span>
+                    <span class="icon">&#9662;</span>
+                </div>
+                <div class="accordion-body">
+                    <div class="accordion-content-block" style="border-top:none; padding-top:0; margin-top:4px;">
+                        <div class="accordion-subtitle">${item.title1}</div>
+                        <div class="accordion-text">${item.desc1}</div>
+                    </div>
+                    <div class="accordion-content-block">
+                        <div class="accordion-subtitle">${item.title2}</div>
+                        <div class="accordion-text">${item.desc2}</div>
+                    </div>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    function toggleAccordion(id) {
+        const card = document.getElementById(id);
+        const icon = card.querySelector('.icon');
+        const isOpen = card.classList.contains('active');
+
+        document.querySelectorAll('.accordion-card, .special-guest-card').forEach(c => {
+            if(c !== card) {
+                c.classList.remove('active');
+                const cIcon = c.querySelector('.icon');
+                if(cIcon) cIcon.innerHTML = '&#9662;';
+            }
+        });
+
+        if (isOpen) {
+            card.classList.remove('active');
+            icon.innerHTML = '&#9662;';
+        } else {
+            card.classList.add('active');
+            icon.innerHTML = '&#9652;';
+        }
+    }
+
+    function updatePlayerFooterLabel() {
+        if (isCosmicPlaying) {
+            document.getElementById('audio-file-label').innerText = "INTERSTELLAR SOUNDTRACK";
+            return;
+        }
+        const titleText = document.getElementById('editable-title').innerText.replace(/\n/g, ' ');
+        const artistText = document.getElementById('editable-artist').innerText;
+        document.getElementById('audio-file-label').innerText = `${titleText.toUpperCase()} / ${artistText.toUpperCase()}`;
+    }
 
     function renderLyrics() {
-        lyricsBox.innerHTML = '';
-        timedLyrics.forEach((line, index) => {
-            const div = document.createElement('div');
-            div.className = 'lyric-line';
-            div.id = `line-${index}`;
-            div.innerText = line.text;
-            lyricsBox.appendChild(div);
+        const container = document.getElementById('content-container');
+        if(!container) return;
+        container.innerHTML = `<ul class="lyrics-list" id="lyrics-list-el"></ul>`;
+        const listEl = document.getElementById('lyrics-list-el');
+        defaultLyrics.forEach((item, index) => {
+            const li = document.createElement('li');
+            li.className = index === 0 ? 'lyric-item active-lyric' : 'lyric-item';
+            li.setAttribute('data-time', item.time);
+            li.onclick = () => jumpToTime(item.time);
+            li.innerText = item.text;
+            listEl.appendChild(li);
         });
     }
-    renderLyrics();
 
-    function switchTab(tab) {
-        currentTab = tab;
-        lyricsBox.classList.remove('active');
-        messageText.classList.remove('active');
-        sectionPrompt.classList.add('active');
-
-        if (tab === 'message') {
-            sectionPrompt.innerText = "Also, here's a message from the sender:";
-            messageText.innerText = textPesan;
-            messageText.classList.add('active');
-            btnPesanHero.classList.add('active');
-            btnLirikHero.classList.remove('active');
-        } else {
-            sectionPrompt.innerText = "Also, here's the lyrics of the song:";
-            lyricsBox.classList.add('active');
-            btnLirikHero.classList.add('active');
-            btnPesanHero.classList.remove('active');
-        }
-
-        pageTwo.scrollIntoView({ behavior: 'smooth' });
-    }
-
-    const swipeArea = document.getElementById('swipeArea');
-    let touchStartX = 0;
-    let touchEndX = 0;
-
-    swipeArea.addEventListener('touchstart', (e) => {
-        touchStartX = e.changedTouches[0].screenX;
-    });
-
-    swipeArea.addEventListener('touchend', (e) => {
-        touchEndX = e.changedTouches[0].screenX;
-        handleSwipe();
-    });
-
-    function handleSwipe() {
-        const threshold = 50;
-        if (touchEndX < touchStartX - threshold) {
-            switchTab('message');
-        } else if (touchEndX > touchStartX + threshold) {
-            switchTab('lyrics');
+    function editTitle() {
+        if(isCosmicPlaying) return;
+        const currentText = document.getElementById('editable-title').innerText;
+        const newText = prompt("Masukkan Judul Lagu Baru:", currentText);
+        if (newText !== null && newText.trim() !== "") {
+            const formattedText = newText.replace(/\n/g, '<br>');
+            document.getElementById('editable-title').innerHTML = formattedText;
+            localStorage.setItem('customTitle', formattedText);
+            updatePlayerFooterLabel();
         }
     }
 
-    function updateDynamicBackground() {
-        const imgSrc = `url('${mainAlbumImg.src}')`;
-        pageBody.style.setProperty('--bg-source', imgSrc);
-    }
-
-    if (mainAlbumImg.complete) {
-        updateDynamicBackground();
-    } else {
-        mainAlbumImg.onload = updateDynamicBackground;
-    }
-
-    const audio = document.getElementById('myAudio');
-    const playIcons = document.querySelectorAll('.playIconClass');
-    const progressBars = document.querySelectorAll('.progressBarClass');
-    const currentTimeEls = document.querySelectorAll('.currentTimeClass');
-    const totalTimeEls = document.querySelectorAll('.totalTimeClass');
-
-    function togglePlay() {
-        if (audio.paused) {
-            audio.play();
-            playIcons.forEach(icon => {
-                icon.classList.remove('fa-play');
-                icon.classList.add('fa-pause');
-            });
-        } else {
-            audio.pause();
-            playIcons.forEach(icon => {
-                icon.classList.remove('fa-pause');
-                icon.classList.add('fa-play');
-            });
+    function editArtist() {
+        if(isCosmicPlaying) return;
+        const currentText = document.getElementById('editable-artist').innerText;
+        const newText = prompt("Masukkan Nama Artis Baru:", currentText);
+        if (newText !== null && newText.trim() !== "") {
+            document.getElementById('editable-artist').innerText = newText;
+            localStorage.setItem('customArtist', newText);
+            updatePlayerFooterLabel();
         }
     }
 
-    audio.addEventListener('timeupdate', () => {
-        const currentTime = audio.currentTime;
-        const percent = (currentTime / audio.duration) * 100;
-        
-        progressBars.forEach(bar => {
-            bar.style.width = percent + '%';
-        });
+    function switchTab(tabName) {
+        const btnLyrics = document.getElementById('btn-lyrics');
+        const btnEdit = document.getElementById('btn-edit');
+        const btnMessage = document.getElementById('btn-message');
+        const container = document.getElementById('content-container');
 
-        const formattedCurrent = formatTime(currentTime);
-        currentTimeEls.forEach(el => {
-            el.textContent = formattedCurrent;
-        });
+        btnLyrics.classList.remove('active');
+        btnEdit.classList.remove('active');
+        btnMessage.classList.remove('active');
 
-        if(!isNaN(audio.duration)) {
-            const formattedTotal = formatTime(audio.duration);
-            totalTimeEls.forEach(el => {
-                el.textContent = formattedTotal;
-            });
-        }
-
-        let activeIndex = -1;
-        for (let i = 0; i < timedLyrics.length; i++) {
-            if (currentTime >= timedLyrics[i].time) {
-                activeIndex = i;
-            }
-        }
-
-        timedLyrics.forEach((line, index) => {
-            const lineEl = document.getElementById(`line-${index}`);
-            if (lineEl) {
-                if (index === activeIndex) {
-                    lineEl.classList.add('active');
-                    if (currentTab === 'lyrics') {
-                        lineEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        if (tabName === 'lyrics') {
+            btnLyrics.classList.add('active');
+            renderLyrics();
+            syncLyricsWithTime(audio.currentTime + 0.4);
+        } else if (tabName === 'edit') {
+            btnEdit.classList.add('active');
+            let currentString = defaultLyrics.map(l => `${l.time}|${l.text}`).join('\n');
+            let newString = prompt("Format Waktu|Teks (contoh: 5.5|Aku sayang kamu):\n\nEdit lirik di bawah ini:", currentString);
+            
+            if (newString !== null) {
+                let lines = newString.split('\n');
+                let parsedLyrics = [];
+                lines.forEach(line => {
+                    let parts = line.split('|');
+                    if(parts.length >= 2) {
+                        let t = parseFloat(parts[0].trim());
+                        let txt = parts.slice(1).join('|').trim();
+                        if(!isNaN(t) && txt !== "") {
+                            parsedLyrics.push({ time: t, text: txt });
+                        }
                     }
+                });
+                if(parsedLyrics.length > 0) {
+                    defaultLyrics = parsedLyrics;
+                    localStorage.setItem('customLyrics', JSON.stringify(defaultLyrics));
+                    alert("Lirik berhasil diperbarui!");
                 } else {
-                    lineEl.classList.remove('active');
+                    alert("Format salah! Gunakan format: detik|teks");
                 }
             }
-        });
-    });
+            switchTab('lyrics');
+        } else if (tabName === 'message') {
+            btnMessage.classList.add('active');
+            const defaultMsg = "Terima kasih sudah jadi bagian terindah dalam hidupku. Semoga kenangan ini bisa terus tersimpan selamanya...";
+            const currentMsg = window.savedMessage || defaultMsg;
 
-    function seekAudio(e) {
-        const container = e.currentTarget;
-        const width = container.clientWidth;
-        const clickX = e.offsetX;
-        audio.currentTime = (clickX / width) * audio.duration;
+            container.innerHTML = `
+                <div id="editable-message" onclick="editMessage()" title="Klik untuk edit pesan" style="font-family: 'Playfair Display', serif; font-size: 1.1rem; line-height: 1.8; color: var(--text-main); padding-top: 10px; text-align: center; font-style: italic; cursor: pointer;">
+                    "${currentMsg}"
+                </div>
+                <div style="font-size: 0.55rem; text-align: center; color: var(--text-muted); margin-top: 15px; text-transform: uppercase; letter-spacing: 0.1em;">(Klik teks di atas untuk mengubah pesan)</div>
+            `;
+        }
+    }
+
+    function editMessage() {
+        const defaultMsg = "Terima kasih sudah jadi bagian terindah dalam hidupku. Semoga kenangan ini bisa terus tersimpan selamanya...";
+        const currentMsg = window.savedMessage || defaultMsg;
+        const newMsg = prompt("Masukkan Pesan Romantis Baru:", currentMsg);
+        if (newMsg !== null && newMsg.trim() !== "") {
+            window.savedMessage = newMsg;
+            localStorage.setItem('customMessage', newMsg);
+            document.getElementById('editable-message').innerText = `"${newMsg}"`;
+        }
+    }
+
+    function handleAudioUpload(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const fileURL = URL.createObjectURL(file);
+            audio.src = fileURL;
+            audio.load();
+            alert("File lagu berhasil diganti! Silakan tekan tombol play.");
+        }
+    }
+
+    function showCosmicScreen() {
+        document.getElementById('screen-slider').classList.add('show-cosmic');
+        
+        if (!audio.paused) {
+            audio.pause();
+        }
+
+        isCosmicPlaying = true;
+        interstellarAudio.volume = 0.6;
+        interstellarAudio.loop = true; // Musik interstellar berputar tanpa henti secara otomatis
+        interstellarAudio.play().catch(e => {
+            console.log("Audio Interstellar memerlukan interaksi atau file interstellar.mp3 belum ada.");
+        });
+
+        playBtn.innerHTML = '&#10074;&#10074;';
+        updatePlayerFooterLabel();
+    }
+
+    function showMainScreen() {
+        document.getElementById('screen-slider').classList.remove('show-cosmic');
+        
+        isCosmicPlaying = false;
+        interstellarAudio.pause();
+        interstellarAudio.currentTime = 0;
+
+        playBtn.innerHTML = '&#9654;';
+        updatePlayerFooterLabel();
+    }
+
+    function togglePlay() {
+        if (isCosmicPlaying) {
+            if (interstellarAudio.paused) {
+                interstellarAudio.play();
+                playBtn.innerHTML = '&#10074;&#10074;';
+            } else {
+                interstellarAudio.pause();
+                playBtn.innerHTML = '&#9654;';
+            }
+            return;
+        }
+
+        if (audio.paused) {
+            audio.play().catch(e => {
+                alert("Pastikan file audio sudah dipilih atau 'musik.mp3' tersedia!");
+            });
+            playBtn.innerHTML = '&#10074;&#10074;';
+        } else {
+            audio.pause();
+            playBtn.innerHTML = '&#9654;';
+        }
     }
 
     audio.addEventListener('ended', () => {
-        playIcons.forEach(icon => {
-            icon.classList.remove('fa-pause');
-            icon.classList.add('fa-play');
-        });
-        progressBars.forEach(bar => {
-            bar.style.width = '0%';
-        });
+        if (!isCosmicPlaying) {
+            playBtn.innerHTML = '&#9654;';
+            progressFill.style.width = '0%';
+            mainTimer.innerText = '00:00';
+            syncLyricsWithTime(0);
+        }
     });
 
-    function formatTime(seconds) {
-        const mins = Math.floor(seconds / 60);
-        const secs = Math.floor(seconds % 60);
-        return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    audio.addEventListener('timeupdate', () => {
+        if (isCosmicPlaying || !audio.duration) return;
+        const current = audio.currentTime;
+        const duration = audio.duration;
+        const percentage = (current / duration) * 100;
+        progressFill.style.width = percentage + '%';
+
+        let mins = Math.floor(current / 60);
+        let secs = Math.floor(current % 60);
+        let timeFormatted = (mins < 10 ? "0" : "") + mins + ":" + (secs < 10 ? "0" : "") + secs;
+        mainTimer.innerText = timeFormatted;
+        
+        let dMins = Math.floor(duration / 60);
+        let dSecs = Math.floor(duration % 60);
+        durationCounter.innerText = mins + ":" + (secs < 10 ? "0" : "") + secs + "/" + dMins + ":" + (dSecs < 10 ? "0" : "") + dSecs;
+
+        syncLyricsWithTime(current + 0.4);
+    });
+
+    interstellarAudio.addEventListener('timeupdate', () => {
+        if (!isCosmicPlaying || !interstellarAudio.duration) return;
+        const current = interstellarAudio.currentTime;
+        const duration = interstellarAudio.duration;
+        const percentage = (current / duration) * 100;
+        progressFill.style.width = percentage + '%';
+
+        let mins = Math.floor(current / 60);
+        let secs = Math.floor(current % 60);
+        let timeFormatted = (mins < 10 ? "0" : "") + mins + ":" + (secs < 10 ? "0" : "") + secs;
+        mainTimer.innerText = timeFormatted;
+        
+        let dMins = Math.floor(duration / 60);
+        let dSecs = Math.floor(duration % 60);
+        durationCounter.innerText = mins + ":" + (secs < 10 ? "0" : "") + secs + "/" + dMins + ":" + (dSecs < 10 ? "0" : "") + dSecs;
+    });
+
+    function syncLyricsWithTime(currentTime) {
+        const items = document.querySelectorAll('.lyric-item');
+        if (items.length === 0) return;
+
+        let activeIndex = -1;
+        items.forEach((item, index) => {
+            const time = parseFloat(item.getAttribute('data-time'));
+            if (currentTime >= time) {
+                activeIndex = index;
+            }
+        });
+
+        items.forEach((item, index) => {
+            if (index === activeIndex) {
+                item.classList.add('active-lyric');
+            } else {
+                item.classList.remove('active-lyric');
+            }
+        });
+    }
+
+    function jumpToTime(seconds) {
+        audio.currentTime = seconds;
+        audio.play().catch(e => {});
+        playBtn.innerHTML = '&#10074;&#10074;';
+    }
+
+    function seekAudio(event) {
+        const container = event.currentTarget;
+        const clickX = event.offsetX;
+        const width = container.offsetWidth;
+        if (isCosmicPlaying && interstellarAudio.duration) {
+            interstellarAudio.currentTime = (clickX / width) * interstellarAudio.duration;
+        } else if (audio.duration) {
+            audio.currentTime = (clickX / width) * audio.duration;
+        }
+    }
+
+    function handleImageUpload(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                albumImg.src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+    }
+
+    albumImg.addEventListener('load', function() {
+        try {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = 50;
+            canvas.height = 50;
+            ctx.drawImage(albumImg, 0, 0, 50, 50);
+
+            const imageData = ctx.getImageData(0, 0, 50, 50).data;
+            let r = 0, g = 0, b = 0, count = 0;
+
+            for (let i = 0; i < imageData.length; i += 8) {
+                r += imageData[i];
+                g += imageData[i+1];
+                b += imageData[i+2];
+                count++;
+            }
+
+            r = Math.floor(r / count);
+            g = Math.floor(g / count);
+            b = Math.floor(b / count);
+
+            const gradR1 = Math.min(255, Math.max(20, Math.floor(r * 0.75)));
+            const gradG1 = Math.min(255, Math.max(15, Math.floor(g * 0.75)));
+            const gradB1 = Math.min(255, Math.max(50, Math.floor(b * 0.75)));
+
+            const gradR2 = Math.max(8, Math.floor(r * 0.35));
+            const gradG2 = Math.max(6, Math.floor(g * 0.35));
+            const gradB2 = Math.max(20, Math.floor(b * 0.35));
+
+            document.documentElement.style.setProperty('--bg-color-1', `rgb(${gradR1}, ${gradG1}, ${gradB1})`);
+            document.documentElement.style.setProperty('--bg-color-2', `rgb(${gradR2}, ${gradG2}, ${gradB2})`);
+        } catch (err) {
+            console.log("Ekstraksi warna dibatasi keamanan browser.");
+        }
+    });
+
+    if (albumImg.complete) {
+        albumImg.dispatchEvent(new Event('load'));
     }
 </script>
 
