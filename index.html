@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Give Me Your Forever - Cosmic Archive</title>
+    <title>Bernaung - Cosmic Archive</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500&display=swap');
 
@@ -154,8 +154,8 @@
         }
         h1 {
             font-family: 'Playfair Display', serif;
-            font-size: 3.2rem;
-            line-height: 0.95;
+            font-size: 2.8rem;
+            line-height: 1;
             margin: 0 0 10px 0;
             color: #ffffff;
             font-weight: 400;
@@ -497,15 +497,145 @@
         .player-sub-text span {
             cursor: pointer;
         }
+
+        /* Styling Tombol Panduan (?) */
+        .guide-btn {
+            width: 28px;
+            height: 28px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            color: var(--text-main);
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+            transition: all 0.25s ease;
+        }
+        .guide-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        /* Styling Modal Buku Panduan (Mengikuti Warna Album) */
+        .guide-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(9, 6, 15, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+            padding: 20px;
+        }
+        .guide-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .guide-content {
+            background: linear-gradient(135deg, var(--bg-color-1), var(--bg-color-2));
+            border: 1px solid rgba(255, 194, 209, 0.3);
+            border-radius: 20px;
+            max-width: 360px;
+            width: 100%;
+            padding: 22px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            text-align: left;
+            box-sizing: border-box;
+            transform: translateY(20px);
+            transition: transform 0.3s ease, background 0.8s ease;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .guide-modal.active .guide-content {
+            transform: translateY(0);
+        }
+        .guide-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 10px;
+        }
+        .guide-header h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            color: #ffffff;
+            margin: 0;
+        }
+        .close-guide-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.4rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .close-guide-btn:hover {
+            color: #ffffff;
+        }
+        .guide-body p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+        .guide-body ul {
+            padding-left: 16px;
+            margin: 0;
+            font-size: 0.72rem;
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+        .guide-body li {
+            margin-bottom: 8px;
+        }
+        .guide-body strong {
+            color: #ffc2d1;
+        }
     </style>
 </head>
 <body>
 
-<audio id="audio-player" src="musik.mp3"></audio>
+<audio id="audio-player" src="bernaung.mp3"></audio>
 <audio id="interstellar-player" src="interstellar.mp3" loop></audio>
 
 <input type="file" id="image-upload" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
 <input type="file" id="audio-upload" accept="audio/*" style="display: none;" onchange="handleAudioUpload(event)">
+
+<!-- MODAL BUKU PANDUAN -->
+<div class="guide-modal" id="guide-modal">
+    <div class="guide-content">
+        <div class="guide-header">
+            <h3>📖 Panduan Penggunaan & Cara Edit</h3>
+            <button class="close-guide-btn" onclick="toggleGuide()">×</button>
+        </div>
+        <div class="guide-body">
+            <p>Halo! Web ini dibuat khusus buat kamu. Biar gak bingung, ini cara gampang buat kustomisasi isinya:</p>
+            <ul>
+                <li><strong>Ganti Foto Album:</strong> Cukup klik pada kotak foto album di sebelah kanan atas.</li>
+                <li><strong>Ganti Judul Lagu:</strong> Klik langsung pada teks judul lagu besar di utama.</li>
+                <li><strong>Ganti Nama Artis:</strong> Klik pada teks nama artis di bawah judul.</li>
+                <li><strong>Ganti Lagu (MP3):</strong> Klik pada teks nama file lagu di bagian bawah dekat tombol Play.</li>
+                <li><strong>Ganti Lirik:</strong> Masuk ke tab "Edit Lyrics" di bawah tombol waktu untuk mengubah teks & ritmenya.</li>
+                <li><strong>Ganti Pesan:</strong> Masuk ke tab "Message", lalu klik teks pesannya untuk mengubah kalimat romantis.</li>
+                <li><strong>Jelajahi Kosmik:</strong> Klik menu "COSMIC ARCHIVE" di pojok kiri atas untuk melihat ensiklopedia planet & kisah Interstellar.</li>
+            </ul>
+        </div>
+    </div>
+</div>
 
 <div class="site-wrapper">
     <div class="screen-container" id="screen-slider">
@@ -546,28 +676,32 @@
                 <div class="top-bar-left" onclick="showCosmicScreen()">
                     <span>&#9776;</span> COSMIC ARCHIVE
                 </div>
-                <div class="top-bar-right" onclick="openWhatsApp()">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="color: #25D366; flex-shrink: 0;">
-                        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
-                    </svg>
-                    CONTACT ME!
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <div class="top-bar-right" onclick="openWhatsApp()">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="color: #25D366; flex-shrink: 0;">
+                            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+                        </svg>
+                        CONTACT ME!
+                    </div>
+                    <!-- TOMBOL BUKU PANDUAN -->
+                    <div class="guide-btn" onclick="toggleGuide()" title="Panduan Penggunaan">?</div>
                 </div>
             </div>
 
             <div class="header-section">
                 <div>
                     <div class="sub-header">PRIVATE FREQUENCY</div>
-                    <h1 id="editable-title" onclick="editTitle()" title="Klik untuk edit judul">Give Me Your<br>Forever</h1>
+                    <h1 id="editable-title" onclick="editTitle()" title="Klik untuk edit judul">Bernaung</h1>
                 </div>
                 <div class="album-box" onclick="document.getElementById('image-upload').click()" title="Klik untuk ganti foto album">
-                    <img id="album-img" src="album.jpg" alt="Album Art" crossorigin="anonymous">
+                    <img id="album-img" src="bernaung.jpg" alt="Album Art" crossorigin="anonymous">
                     <div class="album-badge">&#9835;</div>
                 </div>
             </div>
 
-            <div class="artist" id="editable-artist" onclick="editArtist()" title="Klik untuk edit nama artis">SZA</div>
+            <div class="artist" id="editable-artist" onclick="editArtist()" title="Klik untuk edit nama artis">FEBY PUTRI</div>
 
-            <div class="track-meta">FILE // 001 - UNKNOWN</div>
+            <div class="track-meta">FILE // 001 - SETETES EMBUN</div>
             <div class="time-display" id="main-timer">00:00</div>
 
             <div class="tabs">
@@ -578,12 +712,12 @@
 
             <div class="lyrics-container-wrapper" id="content-container">
                 <ul class="lyrics-list" id="lyrics-list-el">
-                    <li class="lyric-item active-lyric" data-time="0" onclick="jumpToTime(0)">Oh baby, I was there watching wishing you to be mine</li>
-                    <li class="lyric-item" data-time="5.5" onclick="jumpToTime(5.5)">I want you to know</li>
-                    <li class="lyric-item" data-time="8.5" onclick="jumpToTime(8.5)">I love you the most</li>
-                    <li class="lyric-item" data-time="12" onclick="jumpToTime(12)">I'll always be there right by your side</li>
-                    <li class="lyric-item" data-time="18.5" onclick="jumpToTime(18.5)">'Cause baby, you're always in my mind</li>
-                    <li class="lyric-item" data-time="22" onclick="jumpToTime(22)">Just give me your forever (give me your forever)</li>
+                    <li class="lyric-item active-lyric" data-time="9.5" onclick="jumpToTime(9.5)">Dan ku nanti kata pulang</li>
+                    <li class="lyric-item" data-time="14.5" onclick="jumpToTime(14.5)">Ke tempat yang satukan kita</li>
+                    <li class="lyric-item" data-time="18.5" onclick="jumpToTime(18.5)">Bawaku ke dalam dekap</li>
+                    <li class="lyric-item" data-time="22.5" onclick="jumpToTime(22.5)">Yang kau janjikan kepadaku</li>
+                    <li class="lyric-item" data-time="49.0" onclick="jumpToTime(49.0)">Dan kutitipkan aku</li>
+                    <li class="lyric-item" data-time="54.0" onclick="jumpToTime(54.0)">Semua tentang aku kepada...</li>
                 </ul>
             </div>
         </div>
@@ -595,14 +729,14 @@
     <div class="player-inner">
         <div class="player-controls-row">
             <button class="play-btn" id="play-pause-btn" onclick="togglePlay()">&#9654;</button>
-            <div class="track-progress-info" id="audio-file-label" onclick="document.getElementById('audio-upload').click()" title="Klik untuk ganti file lagu (MP3)">GIVE ME YOUR FOREVER / SZA</div>
+            <div class="track-progress-info" id="audio-file-label" onclick="document.getElementById('audio-upload').click()" title="Klik untuk ganti file lagu (MP3)">BERNAUNG / FEBY PUTRI</div>
             <div class="time-counter" id="duration-counter">0:00/0:27</div>
         </div>
         <div class="progress-bar-container" id="progress-container" onclick="seekAudio(event)">
             <div class="progress-bar-fill" id="progress-fill"></div>
         </div>
         <div class="player-sub-text">
-            <span>CREATED BY: MASTEN</span>
+            <span>CREATED BY: NAMA KAMU</span>
             <span>COSMIC ARCHIVE 2026</span>
         </div>
     </div>
@@ -619,12 +753,12 @@
 
     let isCosmicPlaying = false;
     let defaultLyrics = [
-        { time: 0, text: "Oh baby, I was there watching wishing you to be mine" },
-        { time: 5.5, text: "I want you to know" },
-        { time: 8.5, text: "I love you the most" },
-        { time: 12, text: "I'll always be there right by your side" },
-        { time: 18.5, text: "'Cause baby, you're always in my mind" },
-        { time: 22, text: "Just give me your forever (give me your forever)" }
+        { time: 9.5, text: "Dan ku nanti kata pulang" },
+        { time: 14.5, text: "Ke tempat yang satukan kita" },
+        { time: 18.5, text: "Bawaku ke dalam dekap" },
+        { time: 22.5, text: "Yang kau janjikan kepadaku" },
+        { time: 49.0, text: "Dan kutitipkan aku" },
+        { time: 54.0, text: "Semua tentang aku kepada..." }
     ];
 
     const cosmicDatabase = [
@@ -656,24 +790,24 @@
     ];
 
     window.addEventListener('DOMContentLoaded', () => {
-        if(localStorage.getItem('customTitle')) {
-            document.getElementById('editable-title').innerHTML = localStorage.getItem('customTitle');
-        }
-        if(localStorage.getItem('customArtist')) {
-            document.getElementById('editable-artist').innerText = localStorage.getItem('customArtist');
-        }
+        // Otomatis hapus memori lama agar langsung beralih ke Bernaung - Feby Putri
+        localStorage.removeItem('customTitle');
+        localStorage.removeItem('customArtist');
+        localStorage.removeItem('customLyrics');
+
         if(localStorage.getItem('customMessage')) {
             window.savedMessage = localStorage.getItem('customMessage');
         }
-        if(localStorage.getItem('customLyrics')) {
-            try {
-                defaultLyrics = JSON.parse(localStorage.getItem('customLyrics'));
-            } catch(e) {}
-        }
+
         updatePlayerFooterLabel();
         renderLyrics();
         renderAccordionList();
     });
+
+    function toggleGuide() {
+        const modal = document.getElementById('guide-modal');
+        modal.classList.toggle('active');
+    }
 
     function openWhatsApp() {
         const phoneNumber = "6281461232770";
@@ -822,7 +956,7 @@
             switchTab('lyrics');
         } else if (tabName === 'message') {
             btnMessage.classList.add('active');
-            const defaultMsg = "Terima kasih sudah jadi bagian terindah dalam hidupku. Semoga kenangan ini bisa terus tersimpan selamanya...";
+            const defaultMsg = "Kamu adalah rumah. Tempat paling aman untukku bernaung saat seluruh dunia terasa asing dan bising";
             const currentMsg = window.savedMessage || defaultMsg;
 
             container.innerHTML = `
@@ -835,7 +969,7 @@
     }
 
     function editMessage() {
-        const defaultMsg = "Terima kasih sudah jadi bagian terindah dalam hidupku. Semoga kenangan ini bisa terus tersimpan selamanya...";
+        const defaultMsg = "Kamu adalah rumah. Tempat paling aman untukku bernaung saat seluruh dunia terasa asing dan bising";
         const currentMsg = window.savedMessage || defaultMsg;
         const newMsg = prompt("Masukkan Pesan Romantis Baru:", currentMsg);
         if (newMsg !== null && newMsg.trim() !== "") {
@@ -864,9 +998,9 @@
 
         isCosmicPlaying = true;
         interstellarAudio.volume = 0.6;
-        interstellarAudio.loop = true; // Musik interstellar berputar tanpa henti secara otomatis
+        interstellarAudio.loop = true;
         interstellarAudio.play().catch(e => {
-            console.log("Audio Interstellar memerlukan interaksi atau file interstellar.mp3 belum ada.");
+            console.log("Audio Interstellar memerlukan interaksi.");
         });
 
         playBtn.innerHTML = '&#10074;&#10074;';
@@ -898,7 +1032,7 @@
 
         if (audio.paused) {
             audio.play().catch(e => {
-                alert("Pastikan file audio sudah dipilih atau 'musik.mp3' tersedia!");
+                alert("Pastikan file audio sudah dipilih atau 'bernaung.mp3' tersedia!");
             });
             playBtn.innerHTML = '&#10074;&#10074;';
         } else {
