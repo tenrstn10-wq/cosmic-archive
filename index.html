@@ -716,7 +716,7 @@
 
         /* Styling Kartu Kenangan */
         .dedication-card-box {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+            background: rgba(var(--r), var(--g), var(--b), 0.92);
             border: 1px solid var(--ui-border);
             border-radius: 20px;
             padding: 20px;
@@ -747,7 +747,7 @@
 <input type="file" id="audio-upload" accept="audio/*" style="display: none;" onchange="handleAudioUpload(event)">
 <input type="file" id="video-upload" accept="video/mp4,video/*" style="display: none;" onchange="handleVideoUpload(event)">
 
-<!-- Modal Buku Panduan yang Diperlengkap -->
+<!-- Modal Buku Panduan -->
 <div class="guide-modal" id="guide-modal">
     <div class="guide-content">
         <div class="guide-header">
@@ -828,7 +828,6 @@
                 <div class="top-btn small" id="canvas-toggle-btn" onclick="toggleCanvas()" title="Nyalakan/Matikan Canvas Video">
                     ON
                 </div>
-                <!-- Tombol Buku Panduan Menggantikan Tanda Tanya -->
                 <div class="top-btn small" onclick="toggleGuide()" title="Buku Panduan Website">
                     BUKU PANDUAN
                 </div>
@@ -1071,11 +1070,18 @@
         const targetElement = document.getElementById('capture-dedication-area');
         if (!targetElement) return;
 
+        // Ambil warna background saat ini agar hasil download ikut solid sesuai warna album
+        const rootStyles = getComputedStyle(document.documentElement);
+        const r = rootStyles.getPropertyValue('--r').trim();
+        const g = rootStyles.getPropertyValue('--g').trim();
+        const b = rootStyles.getPropertyValue('--b').trim();
+        const solidBgColor = `rgb(${r || 35}, ${g || 35}, ${b || 40})`;
+
         html2canvas(targetElement, {
             scale: 2,
             useCORS: true,
             allowTaint: true,
-            backgroundColor: null
+            backgroundColor: solidBgColor // Background diatur solid, tidak transparan lagi
         }).then(canvas => {
             const link = document.createElement('a');
             link.download = 'kartu-kenangan.png';
