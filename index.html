@@ -5,25 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Semua Aku Dirayakan - Memory Archive</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Cinzel:wght@400;600;700&family=Space+Grotesk:wght@300;400;500;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Cinzel:wght@400;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 
         :root {
-            --r: 35; --g: 35; --b: 40;
+            --r: 50; --g: 40; --b: 70;
             --text-main: #ffffff;
-            --text-muted: #e6e3f0;
-            --ui-border: rgba(255, 255, 255, 0.2);
-            --glass-blur: blur(5px);
-            --subtle-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+            --text-muted: rgba(255, 255, 255, 0.7);
+            --ui-border: rgba(var(--r), var(--g), var(--b), 0.4);
+            --glass-bg: rgba(var(--r), var(--g), var(--b), 0.18);
+            --glass-blur: blur(16px);
+            --subtle-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background: #000;
+            background: #030305;
             color: var(--text-main);
             font-family: 'Plus Jakarta Sans', sans-serif;
             padding: 0;
@@ -42,7 +44,7 @@
             height: 100vh;
             object-fit: cover;
             z-index: -99;
-            opacity: 1;
+            opacity: 0.8;
             display: block;
         }
 
@@ -52,25 +54,28 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: linear-gradient(135deg, rgba(var(--r), var(--g), var(--b), 0.55), rgba(10, 10, 15, 0.75));
-            opacity: 0.6;
+            background: radial-gradient(circle at center, rgba(var(--r), var(--g), var(--b), 0.5) 0%, rgba(3, 3, 5, 0.9) 100%);
+            opacity: 0.85;
             z-index: -98;
             pointer-events: none;
-            transition: background 0.6s ease;
+            transition: background 0.8s ease;
         }
 
         .site-wrapper {
             width: 100%;
-            max-width: 100vw;
+            max-width: 480px;
             min-height: 100vh;
             position: relative;
             overflow: hidden;
-            background: rgba(var(--r), var(--g), var(--b), 0.25);
+            background: var(--glass-bg);
             backdrop-filter: var(--glass-blur);
             -webkit-backdrop-filter: var(--glass-blur);
-            padding: 20px 16px 170px 16px;
+            border-left: 1px solid rgba(255, 255, 255, 0.12);
+            border-right: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 24px 20px 190px 20px;
             z-index: 1;
-            transition: background 0.5s ease;
+            box-shadow: 0 0 60px rgba(0, 0, 0, 0.9);
+            transition: background 0.6s ease;
         }
 
         .app-container {
@@ -79,30 +84,28 @@
             opacity: 1;
             visibility: visible;
             transform: translateX(0);
-            transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s ease;
-            box-sizing: border-box;
+            transition: opacity 0.4s ease, transform 0.4s ease;
         }
 
         .archive-screen {
             position: absolute;
-            top: 20px;
-            left: 16px;
-            right: 16px;
-            width: calc(100% - 32px);
+            top: 24px;
+            left: 20px;
+            right: 20px;
+            width: calc(100% - 40px);
             opacity: 0;
             visibility: hidden;
-            transform: translateX(30px);
+            transform: translateX(40px);
             transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s ease;
-            max-height: calc(100vh - 160px);
+            max-height: calc(100vh - 190px);
             overflow-y: auto;
-            padding-bottom: 30px;
-            box-sizing: border-box;
+            padding-bottom: 40px;
         }
 
         .site-wrapper.show-archive .app-container {
             opacity: 0;
             visibility: hidden;
-            transform: translateX(-30px);
+            transform: translateX(-40px);
             pointer-events: none;
         }
 
@@ -117,48 +120,49 @@
             width: 4px;
         }
         .archive-screen::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.25);
             border-radius: 4px;
         }
 
+        /* Navigasi Tombol Atas Diselaraskan Warna Album */
         .top-bar {
             display: flex;
             flex-direction: column;
             gap: 10px;
-            margin-bottom: 22px;
+            margin-bottom: 24px;
         }
         .top-bar-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
             width: 100%;
-            gap: 8px;
+            gap: 10px;
         }
         
         .top-btn {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
+            gap: 8px;
             cursor: pointer;
-            background: linear-gradient(135deg, rgba(var(--r), var(--g), var(--b), 0.45), rgba(var(--r), var(--g), var(--b), 0.25));
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
-            border: 1px solid var(--ui-border);
-            padding: 9px 14px;
-            border-radius: 14px;
+            background: linear-gradient(135deg, rgba(var(--r), var(--g), var(--b), 0.45), rgba(var(--r), var(--g), var(--b), 0.2));
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 11px 16px;
+            border-radius: 16px;
             color: var(--text-main);
             font-size: 0.68rem;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.08em;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.25);
+            letter-spacing: 0.12em;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--subtle-shadow);
             white-space: nowrap;
         }
         .top-btn:hover {
-            background: linear-gradient(135deg, rgba(var(--r), var(--g), var(--b), 0.65), rgba(var(--r), var(--g), var(--b), 0.4));
-            border-color: rgba(255, 255, 255, 0.5);
+            background: linear-gradient(135deg, rgba(var(--r), var(--g), var(--b), 0.7), rgba(var(--r), var(--g), var(--b), 0.35));
+            border-color: rgba(255, 255, 255, 0.45);
             transform: translateY(-2px);
         }
         .top-btn.small {
@@ -169,6 +173,7 @@
             justify-content: center;
         }
 
+        /* Header Lagu */
         .header-section {
             display: flex;
             justify-content: space-between;
@@ -176,66 +181,62 @@
             margin-bottom: 6px;
         }
         .sub-header {
-            font-size: 0.62rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.6rem;
             text-transform: uppercase;
-            letter-spacing: 0.2em;
+            letter-spacing: 0.25em;
             color: var(--text-muted);
             margin-bottom: 8px;
             font-weight: 700;
-            text-shadow: var(--subtle-shadow);
         }
         h1 {
             font-family: 'Cinzel', serif;
-            font-size: 1.85rem;
-            line-height: 1.15;
-            margin: 0 0 8px 0;
+            font-size: 1.75rem;
+            line-height: 1.2;
+            margin: 0 0 6px 0;
             color: #ffffff;
             font-weight: 700;
             cursor: pointer;
             transition: opacity 0.2s;
-            text-shadow: var(--subtle-shadow);
+            text-shadow: 0 2px 12px rgba(0,0,0,0.6);
         }
         h1:hover {
-            opacity: 0.85;
-            text-decoration: underline dotted;
+            opacity: 0.8;
         }
         .artist {
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 0.78rem;
+            font-size: 0.75rem;
             letter-spacing: 0.2em;
             text-transform: uppercase;
-            margin-bottom: 22px;
+            margin-bottom: 20px;
             color: var(--text-muted);
             cursor: pointer;
             width: fit-content;
             font-weight: 600;
-            text-shadow: var(--subtle-shadow);
         }
         .artist:hover {
             color: #ffffff;
-            text-decoration: underline dotted;
         }
         
         .album-box {
-            width: 95px;
-            height: 95px;
-            background: linear-gradient(135deg, rgba(var(--r), var(--g), var(--b), 0.45), rgba(var(--r), var(--g), var(--b), 0.25));
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
-            border: 1px solid var(--ui-border);
-            border-radius: 20px;
+            width: 105px;
+            height: 105px;
+            background: rgba(var(--r), var(--g), var(--b), 0.3);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 26px;
             position: relative;
             flex-shrink: 0;
             overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.25);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.35);
             cursor: pointer;
-            transition: transform 0.3s ease;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
         .album-box:hover {
-            transform: scale(1.04);
+            transform: scale(1.06) rotate(2deg);
         }
         .album-box img {
             width: 100%;
@@ -247,52 +248,51 @@
             position: absolute;
             bottom: 6px;
             right: 6px;
-            background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(4px);
-            border: 1px solid rgba(255, 255, 255, 0.25);
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 50%;
-            width: 24px;
-            height: 24px;
+            width: 26px;
+            height: 26px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 10px;
+            font-size: 11px;
             color: #fff;
-            pointer-events: none;
         }
+
         .track-meta {
-            font-size: 0.62rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.6rem;
             color: var(--text-muted);
             margin-bottom: 4px;
-            letter-spacing: 0.12em;
+            letter-spacing: 0.15em;
             text-transform: uppercase;
             font-weight: 700;
-            text-shadow: var(--subtle-shadow);
         }
         .time-display {
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.1rem;
-            margin-bottom: 22px;
+            font-size: 1.15rem;
+            margin-bottom: 20px;
             color: #ffffff;
             font-weight: 700;
-            text-shadow: var(--subtle-shadow);
         }
         
+        /* Tab Navigasi */
         .tabs {
             display: flex;
-            background: linear-gradient(135deg, rgba(var(--r), var(--g), var(--b), 0.4), rgba(var(--r), var(--g), var(--b), 0.2));
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
-            padding: 4px;
-            border-radius: 16px;
+            background: linear-gradient(135deg, rgba(var(--r), var(--g), var(--b), 0.3), rgba(var(--r), var(--g), var(--b), 0.15));
+            backdrop-filter: blur(14px);
+            padding: 5px;
+            border-radius: 18px;
             width: fit-content;
             margin-bottom: 24px;
-            border: 1px solid var(--ui-border);
+            border: 1px solid rgba(255, 255, 255, 0.15);
         }
         .tab-btn {
-            padding: 6px 16px;
+            padding: 7px 18px;
             border: none;
-            border-radius: 12px;
+            border-radius: 14px;
             background: transparent;
             color: var(--text-muted);
             cursor: pointer;
@@ -301,12 +301,13 @@
             transition: all 0.3s ease;
         }
         .tab-btn.active {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.12));
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.12));
             color: #ffffff;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.3);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.4);
         }
+
         .lyrics-container-wrapper {
-            min-height: 200px;
+            min-height: 220px;
         }
         .lyrics-list {
             list-style: none;
@@ -315,50 +316,47 @@
             position: relative;
         }
         .lyric-item {
-            margin-bottom: 22px;
+            margin-bottom: 24px;
             font-size: 1.05rem;
-            line-height: 1.5;
-            color: var(--text-muted);
+            line-height: 1.55;
+            color: rgba(255, 255, 255, 0.5);
             cursor: pointer;
-            transition: all 0.3s ease;
-            opacity: 0.88;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             font-weight: 600;
-            text-shadow: var(--subtle-shadow);
         }
         .lyric-item:hover {
-            color: #ffffff;
-            opacity: 1;
+            color: rgba(255, 255, 255, 0.85);
         }
         .lyric-item.active-lyric {
             color: #ffffff;
-            font-weight: 700;
+            font-weight: 800;
             opacity: 1;
-            transform: scale(1.02) translateX(6px);
-            text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+            transform: scale(1.03) translateX(8px);
+            text-shadow: 0 2px 14px rgba(var(--r), var(--g), var(--b), 0.9);
         }
 
+        /* Studio Lirik */
         .lyric-studio-overlay {
-            background: linear-gradient(135deg, rgba(var(--r), var(--g), var(--b), 0.4), rgba(var(--r), var(--g), var(--b), 0.2));
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
-            border: 1px solid var(--ui-border);
-            border-radius: 20px;
-            padding: 16px;
+            background: linear-gradient(135deg, rgba(var(--r), var(--g), var(--b), 0.35), rgba(var(--r), var(--g), var(--b), 0.15));
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 22px;
+            padding: 18px;
             margin-top: 5px;
         }
         .studio-textarea {
             width: 100%;
             height: 120px;
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid var(--ui-border);
-            border-radius: 14px;
+            background: rgba(0, 0, 0, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
             color: #ffffff;
-            padding: 12px;
+            padding: 14px;
             font-family: 'Plus Jakarta Sans', sans-serif;
             font-size: 0.82rem;
             resize: vertical;
             margin-bottom: 12px;
-            backdrop-filter: blur(4px);
+            outline: none;
         }
         .studio-btn-row {
             display: flex;
@@ -366,25 +364,24 @@
         }
         .studio-btn {
             flex: 1;
-            background: linear-gradient(135deg, rgba(var(--r), var(--g), var(--b), 0.45), rgba(var(--r), var(--g), var(--b), 0.25));
-            border: 1px solid var(--ui-border);
-            padding: 10px;
-            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(var(--r), var(--g), var(--b), 0.5), rgba(var(--r), var(--g), var(--b), 0.2));
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 12px;
+            border-radius: 14px;
             color: #ffffff;
             font-size: 0.68rem;
-            font-weight: 700;
+            font-weight: 800;
             text-transform: uppercase;
             cursor: pointer;
             text-align: center;
-            backdrop-filter: blur(4px);
         }
         .studio-btn.primary {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.65));
-            color: #121118;
-            font-weight: 800;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+            color: #030305;
             border-color: #ffffff;
         }
 
+        /* Archive Directory */
         .archive-back-bar {
             display: flex;
             align-items: center;
@@ -392,57 +389,53 @@
             font-size: 0.68rem;
             text-transform: uppercase;
             letter-spacing: 0.12em;
-            margin-bottom: 18px;
+            margin-bottom: 20px;
             color: var(--text-muted);
             cursor: pointer;
             font-weight: 700;
-            text-shadow: var(--subtle-shadow);
         }
         .archive-main-title {
             font-family: 'Cinzel', serif;
-            font-size: 1.9rem;
+            font-size: 1.8rem;
             color: #ffffff;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
             font-weight: 700;
-            text-shadow: var(--subtle-shadow);
         }
         .archive-sub-title {
-            font-size: 0.65rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.62rem;
             color: var(--text-muted);
             text-transform: uppercase;
-            letter-spacing: 0.18em;
-            margin-bottom: 22px;
+            letter-spacing: 0.2em;
+            margin-bottom: 24px;
             font-weight: 700;
-            text-shadow: var(--subtle-shadow);
         }
 
         .accordion-card {
-            background: linear-gradient(135deg, rgba(var(--r), var(--g), var(--b), 0.4), rgba(var(--r), var(--g), var(--b), 0.2));
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
-            border: 1px solid var(--ui-border);
-            border-radius: 18px;
-            padding: 16px;
+            background: linear-gradient(135deg, rgba(var(--r), var(--g), var(--b), 0.35), rgba(var(--r), var(--g), var(--b), 0.15));
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 20px;
+            padding: 18px;
             text-align: left;
-            margin-bottom: 12px;
+            margin-bottom: 14px;
             cursor: pointer;
-            transition: all 0.35s ease;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .accordion-card:hover {
-            background: linear-gradient(135deg, rgba(var(--r), var(--g), var(--b), 0.55), rgba(var(--r), var(--g), var(--b), 0.3));
-            border-color: rgba(255, 255, 255, 0.4);
+            background: linear-gradient(135deg, rgba(var(--r), var(--g), var(--b), 0.55), rgba(var(--r), var(--g), var(--b), 0.25));
+            border-color: rgba(255, 255, 255, 0.35);
             transform: translateY(-2px);
         }
         .accordion-header {
             font-size: 0.75rem;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.12em;
             color: #ffffff;
-            font-weight: 700;
+            font-weight: 800;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            text-shadow: var(--subtle-shadow);
         }
         .accordion-body {
             max-height: 0;
@@ -455,36 +448,34 @@
             margin-top: 14px;
         }
         .accordion-content-block {
-            border-top: 1px solid var(--ui-border);
-            padding-top: 12px;
-            margin-top: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.12);
+            padding-top: 14px;
+            margin-top: 14px;
         }
         .accordion-subtitle {
-            font-size: 0.65rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.62rem;
             text-transform: uppercase;
-            letter-spacing: 0.12em;
+            letter-spacing: 0.15em;
             color: var(--text-muted);
             margin-bottom: 6px;
             font-weight: 700;
-            text-shadow: var(--subtle-shadow);
         }
         .accordion-text {
             font-size: 0.85rem;
-            color: #ffffff;
+            color: rgba(255, 255, 255, 0.9);
             line-height: 1.65;
-            text-shadow: var(--subtle-shadow);
         }
 
         .special-guest-card {
-            background: linear-gradient(135deg, rgba(var(--r), var(--g), var(--b), 0.45), rgba(59, 130, 246, 0.25));
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
-            border: 1px solid rgba(139, 92, 246, 0.4);
-            border-radius: 18px;
-            padding: 16px;
+            background: linear-gradient(135deg, rgba(var(--r), var(--g), var(--b), 0.45), rgba(80, 40, 140, 0.35));
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(180, 120, 255, 0.35);
+            border-radius: 20px;
+            padding: 18px;
             text-align: left;
-            margin-top: 20px;
-            margin-bottom: 20px;
+            margin-top: 24px;
+            margin-bottom: 24px;
             cursor: pointer;
         }
         .special-guest-header {
@@ -492,11 +483,10 @@
             text-transform: uppercase;
             letter-spacing: 0.12em;
             color: #ffffff;
-            font-weight: 700;
+            font-weight: 800;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            text-shadow: var(--subtle-shadow);
         }
         .special-guest-body {
             max-height: 0;
@@ -509,19 +499,23 @@
             margin-top: 14px;
         }
 
+        /* Player Footer Menyesuaikan Warna Album */
         .player-footer {
             position: fixed;
             bottom: 0;
-            left: 0;
+            left: 50%;
+            transform: translateX(-50%);
             width: 100%;
-            background: linear-gradient(135deg, rgba(var(--r), var(--g), var(--b), 0.65), rgba(var(--r), var(--g), var(--b), 0.4));
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            padding: 16px 20px 18px 20px;
-            border-top: 1px solid var(--ui-border);
+            max-width: 480px;
+            background: linear-gradient(135deg, rgba(var(--r), var(--g), var(--b), 0.75), rgba(10, 10, 15, 0.9));
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 18px 22px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
             box-sizing: border-box;
             z-index: 100;
-            transition: background 0.5s ease;
+            box-shadow: 0 -15px 45px rgba(0,0,0,0.85);
+            transition: background 0.6s ease;
         }
         .player-inner {
             width: 100%;
@@ -531,56 +525,56 @@
             display: flex;
             align-items: center;
             gap: 14px;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
         .play-btn {
             background: #ffffff;
-            color: #121118;
+            color: #030305;
             border: none;
             border-radius: 50%;
-            width: 42px;
-            height: 42px;
+            width: 46px;
+            height: 46px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 13px;
+            font-size: 14px;
             flex-shrink: 0;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(255, 255, 255, 0.35);
+            transition: transform 0.3s ease;
         }
         .play-btn:hover {
-            transform: scale(1.08);
+            transform: scale(1.1);
         }
 
         .track-progress-info {
             display: flex;
             flex-direction: column;
-            gap: 2px;
+            gap: 3px;
             flex-grow: 1;
             overflow: hidden;
             cursor: pointer;
         }
         .track-title-text {
-            font-size: 0.72rem;
+            font-size: 0.75rem;
             color: #ffffff;
-            font-weight: 700;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            text-transform: uppercase;
-            text-shadow: var(--subtle-shadow);
-        }
-        .track-artist-text {
-            font-size: 0.65rem;
-            color: var(--text-muted);
             font-weight: 800;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            text-shadow: var(--subtle-shadow);
+        }
+        .track-artist-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
         }
 
         .bar-visualizer-container {
@@ -592,58 +586,59 @@
             flex-shrink: 0;
         }
         .mini-bar {
-            width: 5px;
-            background: rgba(255, 255, 255, 0.85);
-            border-radius: 3px;
+            width: 4px;
+            background: #ffffff;
+            border-radius: 4px;
             height: 8px;
             transition: height 0.08s ease;
-            box-shadow: var(--subtle-shadow);
+            box-shadow: 0 0 10px rgba(255,255,255,0.7);
         }
 
         .time-counter {
-            font-size: 0.72rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.7rem;
             color: var(--text-muted);
             flex-shrink: 0;
             font-weight: 700;
-            text-shadow: var(--subtle-shadow);
         }
         .progress-bar-container {
-            height: 5px;
-            background: rgba(255,255,255,0.2);
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
             width: 100%;
             cursor: pointer;
             position: relative;
             margin-bottom: 10px;
-            border-radius: 5px;
+            border-radius: 6px;
             overflow: hidden;
         }
         .progress-bar-fill {
             height: 100%;
             width: 0%;
-            background: linear-gradient(90deg, #fff, #e6e3f0);
-            border-radius: 5px;
+            background: linear-gradient(90deg, #ffffff, rgba(var(--r), var(--g), var(--b), 0.8));
+            border-radius: 6px;
             transition: width 0.1s linear;
         }
         .player-sub-text {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            font-family: 'Space Grotesk', sans-serif;
             font-size: 0.58rem;
             color: var(--text-muted);
             text-transform: uppercase;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.15em;
             font-weight: 700;
-            text-shadow: var(--subtle-shadow);
         }
 
+        /* Modal Panduan & Kartu Kenangan Estetik Menyeluruh */
         .guide-modal {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(8px);
+            background: rgba(3, 3, 5, 0.8);
+            backdrop-filter: blur(16px);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -658,80 +653,166 @@
             visibility: visible;
         }
         .guide-content {
-            background: linear-gradient(135deg, rgba(var(--r), var(--g), var(--b), 0.95), rgba(var(--r), var(--g), var(--b), 0.75));
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--ui-border);
-            border-radius: 24px;
+            background: linear-gradient(145deg, rgba(var(--r), var(--g), var(--b), 0.85), rgba(10, 10, 15, 0.95));
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 28px;
             width: 100%;
             max-width: 420px;
             max-height: 85vh;
             overflow-y: auto;
-            padding: 24px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            padding: 26px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.95);
         }
         .guide-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 14px;
-            border-bottom: 1px solid var(--ui-border);
-            padding-bottom: 12px;
+            margin-bottom: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+            padding-bottom: 14px;
         }
         .guide-header h3 {
             font-family: 'Cinzel', serif;
-            font-size: 1.15rem;
+            font-size: 1.2rem;
             color: #ffffff;
-            text-shadow: var(--subtle-shadow);
+            font-weight: 700;
         }
         .close-guide-btn {
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid var(--ui-border);
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 50%;
-            width: 30px;
-            height: 30px;
+            width: 32px;
+            height: 32px;
             color: #ffffff;
             font-size: 1.1rem;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: background 0.2s;
+        }
+        .close-guide-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
         }
         .guide-body p, .guide-body ul {
             font-size: 0.78rem;
-            color: #e6e3f0;
-            line-height: 1.6;
-            text-shadow: var(--subtle-shadow);
+            color: rgba(255, 255, 255, 0.85);
+            line-height: 1.65;
         }
         .guide-body ul {
             padding-left: 18px;
-            margin-top: 10px;
+            margin-top: 12px;
         }
         .guide-body li {
-            margin-bottom: 8px;
+            margin-bottom: 10px;
         }
         .guide-body strong {
             color: #ffffff;
         }
 
-        /* Styling Kartu Kenangan */
+        /* KARTU KENANGAN SPOTIFY WRAPPED (Warna Dinamis Sesuai Album) */
         .dedication-card-box {
-            background: rgba(var(--r), var(--g), var(--b), 0.92);
-            border: 1px solid var(--ui-border);
-            border-radius: 20px;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            background: linear-gradient(145deg, rgba(var(--r), var(--g), var(--b), 0.95) 0%, #08080c 100%) !important;
+            border: 2px solid rgba(var(--r), var(--g), var(--b), 0.9);
+            border-radius: 30px;
+            padding: 28px 24px;
+            text-align: left;
+            box-shadow: 0 30px 70px rgba(0,0,0,0.95), inset 0 2px 0 rgba(255,255,255,0.4);
+            position: relative;
+            overflow: hidden;
+        }
+        .wrapped-top-badge {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+        .wrapped-brand {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.72rem;
+            font-weight: 900;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: #ffffff;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+        }
+        .wrapped-year {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.68rem;
+            font-weight: 800;
+            color: rgba(255, 255, 255, 0.75);
+            letter-spacing: 0.12em;
         }
         .dedication-img-preview {
-            width: 140px;
-            height: 140px;
-            border-radius: 16px;
+            width: 100%;
+            height: 220px;
+            border-radius: 18px;
             object-fit: cover;
-            margin: 0 auto 14px auto;
-            border: 1px solid var(--ui-border);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+            margin-bottom: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.85);
             display: block;
+        }
+        .wrapped-song-info {
+            margin-bottom: 16px;
+        }
+        .wrapped-title {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 900;
+            color: #ffffff;
+            line-height: 1.2;
+            margin-bottom: 4px;
+            letter-spacing: -0.02em;
+        }
+        .wrapped-artist {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.8);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+        }
+        .wrapped-quote-box {
+            background: rgba(var(--r), var(--g), var(--b), 0.25);
+            border-left: 3px solid #ffffff;
+            padding: 14px 16px;
+            border-radius: 0 14px 14px 0;
+            margin-bottom: 18px;
+            backdrop-filter: blur(8px);
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            border-right: 1px solid rgba(255, 255, 255, 0.15);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        .wrapped-quote-text {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: #ffffff;
+            font-style: italic;
+            font-weight: 500;
+        }
+        .wrapped-footer-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding-top: 14px;
+        }
+        .wrapped-creator {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.62rem;
+            font-weight: 800;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.65);
+        }
+        .wrapped-spotify-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.68rem;
+            font-weight: 900;
+            color: #ffffff;
+            letter-spacing: 0.05em;
         }
     </style>
 </head>
@@ -760,7 +841,7 @@
                 <li><strong>Tombol ARCHIVE:</strong> Membuka halaman ensiklopedia antariksa & memutar musik latar belakang Interstellar secara otomatis.</li>
                 <li><strong>Tombol ON/OFF:</strong> Berfungsi untuk menyalakan atau mematikan animasi video latar belakang (Canvas Video) sesuai kenyamanan tampilanmu.</li>
                 <li><strong>Tombol BUKU PANDUAN:</strong> Membuka jendela pop-up petunjuk penggunaan lengkap ini.</li>
-                <li><strong>Upload Album & Background Dinamis:</strong> Klik pada foto album utama untuk mengganti gambar. Warna latar belakang website akan otomatis menyesuaikan dengan warna dominan foto album pilihanmu.</li>
+                <li><strong>Upload Album & Background Dinamis:</strong> Klik pada foto album utama untuk mengganti gambar. Warna seluruh latar belakang website, tombol, hingga pemutar musik akan otomatis bernuansa selaras dengan warna dominan foto album pilihanmu.</li>
                 <li><strong>Edit Judul & Artis:</strong> Klik langsung pada teks Judul Lagu atau Nama Artis di halaman utama untuk mengubahnya sesuai keinginan.</li>
                 <li><strong>Tab Lyrics & Edit Lirik:</strong> Digunakan untuk melihat lirik berjalan otomatis mengikuti waktu lagu, atau merekam durasi lirik secara real-time pada menu Edit.</li>
                 <li><strong>Tab Message & Kartu Kenangan:</strong> Tempat membaca dan mengubah pesan khusus. Di sini tersedia tombol untuk membuka jendela <strong>Kartu Kenangan</strong>.</li>
@@ -770,7 +851,7 @@
     </div>
 </div>
 
-<!-- Modal Kartu Kenangan -->
+<!-- Modal Kartu Kenangan Estetik -->
 <div class="guide-modal" id="dedication-modal">
     <div class="guide-content">
         <div class="guide-header">
@@ -778,29 +859,35 @@
             <button class="close-guide-btn" onclick="toggleDedicationModal()">×</button>
         </div>
         <div class="guide-body">
+            
             <div class="dedication-card-box" id="capture-dedication-area">
-                <div style="font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--text-muted); margin-bottom: 12px; font-weight: 700;">
-                    // MEMORY ARCHIVE CARD
+                <div class="wrapped-top-badge">
+                    <span class="wrapped-brand">✦ WRAPPED MEMORIES</span>
+                    <span class="wrapped-year">2026</span>
                 </div>
-                <!-- Foto otomatis sinkron dengan foto album utama -->
-                <img id="dedication-img-preview" class="dedication-img-preview" src="" alt="Dedication Art" crossorigin="anonymous">
+
+                <img id="dedication-img-preview" class="dedication-img-preview" src="" alt="Album Art" crossorigin="anonymous">
                 
-                <div id="dedication-title-view" style="font-family: 'Cinzel', serif; font-size: 1.15rem; font-weight: 700; color: #fff; margin-bottom: 4px;">Semua Aku Dirayakan</div>
-                <div id="dedication-artist-view" style="font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--text-muted); margin-bottom: 12px; font-weight: 600;">Nadin Amizah</div>
-                
-                <div style="border-top: 1px solid var(--ui-border); padding-top: 12px; margin-bottom: 10px; font-style: italic; font-size: 0.85rem; line-height: 1.5; color: #fff;" id="dedication-msg-view">
-                    "Nadin, ternyata menunggu sorai sampai dengan semua aku dirayakan tak semulus yang pernah kulihat."
+                <div class="wrapped-song-info">
+                    <div id="dedication-title-view" class="wrapped-title">Semua Aku Dirayakan</div>
+                    <div id="dedication-artist-view" class="wrapped-artist">Nadin Amizah</div>
+                </div>
+
+                <div class="wrapped-quote-box">
+                    <div class="wrapped-quote-text" id="dedication-msg-view">
+                        "Nadin, ternyata menunggu sorai sampai dengan 'semua aku dirayakan' tak semulus yang pernah kulihat."
+                    </div>
                 </div>
                 
-                <!-- Nama Pembuat di Kartu -->
-                <div style="font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-muted); font-weight: 700;">
-                    Created by: Masten
+                <div class="wrapped-footer-row">
+                    <div class="wrapped-creator" id="dedication-creator-view">Created by: Masten</div>
+                    <div class="wrapped-spotify-logo">▶ MEMORY ARCHIVE</div>
                 </div>
             </div>
 
             <!-- Tombol Aksi Download & WhatsApp -->
-            <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 16px;">
-                <div class="top-btn long" onclick="downloadDedicationCard()" style="background: linear-gradient(135deg, rgba(255,255,255,0.35), rgba(255,255,255,0.18)); font-weight: 800;">
+            <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 18px;">
+                <div class="top-btn long" onclick="downloadDedicationCard()" style="background: linear-gradient(135deg, rgba(var(--r), var(--g), var(--b), 0.6), rgba(var(--r), var(--g), var(--b), 0.3)); font-weight: 900; border: 1px solid rgba(255,255,255,0.3);">
                     DOWNLOAD KARTU
                 </div>
                 <div class="top-btn long" onclick="openWhatsApp()" style="font-weight: 800;">
@@ -890,7 +977,7 @@
                 <span class="icon">&#9662;</span>
             </div>
             <div class="special-guest-body">
-                <div class="accordion-content-block" style="border-top: 1px solid var(--ui-border);">
+                <div class="accordion-content-block" style="border-top: 1px solid rgba(255,255,255,0.15);">
                     <div class="accordion-subtitle">Sinopsis & Perjalanan Kosmik</div>
                     <div class="accordion-text"><i>Interstellar</i> menceritakan kisah Cooper, seorang mantan pilot NASA yang harus meninggalkan bumi dan anak perempuannya, Murph, demi menjalani misi penjelajahan menembus lubang cacing (wormhole) untuk mencari rumah baru bagi umat manusia di galaksi lain.</div>
                 </div>
@@ -1007,7 +1094,14 @@
         }
 
         const defaultMsg = "Nadin, ternyata menunggu sorai sampai dengan 'semua aku dirayakan' tak semulus yang pernah kulihat.";
-        window.savedMessage = localStorage.getItem('customMessage') || defaultMsg;
+        
+        let cachedMsg = localStorage.getItem('customMessage');
+        if (!cachedMsg) {
+            window.savedMessage = defaultMsg;
+            localStorage.setItem('customMessage', defaultMsg);
+        } else {
+            window.savedMessage = cachedMsg;
+        }
 
         updatePlayerFooterLabel();
         renderLyrics();
@@ -1016,12 +1110,9 @@
         canvasVideo.play().then(() => {
             isCanvasActive = true;
             canvasToggleBtn.innerText = "ON";
-            document.documentElement.style.setProperty('--glass-blur', 'blur(5px)');
         }).catch(() => {
             isCanvasActive = false;
             canvasToggleBtn.innerText = "OFF";
-            document.documentElement.style.setProperty('--glass-blur', 'blur(12px)');
-            document.getElementById('dynamic-bg-overlay').style.opacity = '0.65';
         });
         
         setTimeout(() => extractColorsFromImageElement(albumImg), 300);
@@ -1035,9 +1126,9 @@
 
         visualizerInterval = setInterval(() => {
             if (bar1 && bar2 && bar3) {
-                bar1.style.height = Math.floor(Math.random() * 18 + 8) + 'px';
-                bar2.style.height = Math.floor(Math.random() * 22 + 8) + 'px';
-                bar3.style.height = Math.floor(Math.random() * 16 + 8) + 'px';
+                bar1.style.height = Math.floor(Math.random() * 20 + 8) + 'px';
+                bar2.style.height = Math.floor(Math.random() * 24 + 8) + 'px';
+                bar3.style.height = Math.floor(Math.random() * 18 + 8) + 'px';
             }
         }, 120);
     }
@@ -1063,6 +1154,7 @@
             document.getElementById('dedication-title-view').innerText = document.getElementById('editable-title').innerText.replace(/\n/g, ' ');
             document.getElementById('dedication-artist-view').innerText = document.getElementById('editable-artist').innerText;
             document.getElementById('dedication-msg-view').innerHTML = `"${window.savedMessage || ""}"`;
+            document.getElementById('dedication-creator-view').innerText = "Created by: Masten";
         }
     }
 
@@ -1070,21 +1162,20 @@
         const targetElement = document.getElementById('capture-dedication-area');
         if (!targetElement) return;
 
-        // Ambil warna background saat ini agar hasil download ikut solid sesuai warna album
         const rootStyles = getComputedStyle(document.documentElement);
         const r = rootStyles.getPropertyValue('--r').trim();
         const g = rootStyles.getPropertyValue('--g').trim();
         const b = rootStyles.getPropertyValue('--b').trim();
-        const solidBgColor = `rgb(${r || 35}, ${g || 35}, ${b || 40})`;
+        const solidBgColor = `rgb(${r || 50}, ${g || 40}, ${b || 70})`;
 
         html2canvas(targetElement, {
             scale: 2,
             useCORS: true,
             allowTaint: true,
-            backgroundColor: solidBgColor // Background diatur solid, tidak transparan lagi
+            backgroundColor: solidBgColor
         }).then(canvas => {
             const link = document.createElement('a');
-            link.download = 'kartu-kenangan.png';
+            link.download = 'spotify-wrapped-aesthetic-card.png';
             link.href = canvas.toDataURL('image/png');
             link.click();
         }).catch(err => {
@@ -1098,14 +1189,10 @@
             canvasVideo.style.display = 'block';
             canvasVideo.play().catch(e => {});
             canvasToggleBtn.innerText = "ON";
-            document.documentElement.style.setProperty('--glass-blur', 'blur(5px)');
-            document.getElementById('dynamic-bg-overlay').style.opacity = '0.6';
         } else {
             canvasVideo.style.display = 'none';
             canvasVideo.pause();
             canvasToggleBtn.innerText = "OFF";
-            document.documentElement.style.setProperty('--glass-blur', 'blur(12px)');
-            document.getElementById('dynamic-bg-overlay').style.opacity = '0.75';
         }
     }
 
@@ -1117,7 +1204,8 @@
     function openWhatsApp() {
         const rawText = window.savedMessage || "";
         const cleanText = rawText.replace(/<br\s*[\/]?>/gi, '\n').trim();
-        const fullMessage = `kirimkan foto kamu yang disimpan tadi\n\nPesan:\n"${cleanText}"`;
+        
+        const fullMessage = `(kirimkan foto kamu yang tadi didownload disini)\n\nPesan:\n"${cleanText}"`;
 
         const phoneNumber = "6281461232770";
         window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(fullMessage)}`, '_blank');
@@ -1299,7 +1387,7 @@
                 <div style="font-size: 0.58rem; text-align: center; color: var(--text-muted); margin-top: 10px; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.1em; text-shadow: var(--subtle-shadow);">(Klik teks di atas untuk mengubah pesan)</div>
                 
                 <div style="display: flex; justify-content: center;">
-                    <div class="top-btn" onclick="toggleDedicationModal()" style="padding: 10px 24px; border-radius: 16px; font-weight: 800;">
+                    <div class="top-btn" onclick="toggleDedicationModal()" style="padding: 11px 26px; border-radius: 16px; font-weight: 800;">
                         BUKA KARTU KENANGAN
                     </div>
                 </div>
@@ -1380,7 +1468,6 @@
             canvasVideo.style.display = 'block';
             canvasVideo.play().catch(e => {});
             canvasToggleBtn.innerText = "ON";
-            document.documentElement.style.setProperty('--glass-blur', 'blur(5px)');
             alert("Canvas Video latar belakang berhasil dipasang!");
         }
     }
@@ -1395,7 +1482,7 @@
         interstellarAudio.loop = true;
         interstellarAudio.play().catch(e => {});
         canvasVideo.pause();
-        document.getElementById('dynamic-bg-overlay').style.opacity = '0.2';
+        document.getElementById('dynamic-bg-overlay').style.opacity = '0.3';
         playBtn.innerHTML = '&#10074;&#10074;';
         startVisualizerAnimation();
         updatePlayerFooterLabel();
@@ -1408,7 +1495,7 @@
         interstellarAudio.currentTime = 0;
         if (isCanvasActive) {
             canvasVideo.play().catch(e => {});
-            document.getElementById('dynamic-bg-overlay').style.opacity = '0.6';
+            document.getElementById('dynamic-bg-overlay').style.opacity = '0.85';
         }
         playBtn.innerHTML = '&#9654;';
         stopVisualizerAnimation();
@@ -1559,7 +1646,7 @@
                 g = Math.floor(g / count);
                 b = Math.floor(b / count);
             } else {
-                r = 35; g = 35; b = 40;
+                r = 50; g = 40; b = 70;
             }
 
             r = Math.min(255, Math.floor(r * 1.35));
@@ -1570,9 +1657,9 @@
             document.documentElement.style.setProperty('--g', g);
             document.documentElement.style.setProperty('--b', b);
         } catch (err) {
-            document.documentElement.style.setProperty('--r', 35);
-            document.documentElement.style.setProperty('--g', 35);
-            document.documentElement.style.setProperty('--b', 40);
+            document.documentElement.style.setProperty('--r', 50);
+            document.documentElement.style.setProperty('--g', 40);
+            document.documentElement.style.setProperty('--b', 70);
         }
     }
 
