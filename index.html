@@ -845,7 +845,7 @@
                 <li><strong>Edit Judul & Artis:</strong> Klik langsung pada teks Judul Lagu atau Nama Artis di halaman utama untuk mengubahnya sesuai keinginan.</li>
                 <li><strong>Tab Lyrics & Edit Lirik:</strong> Digunakan untuk melihat lirik berjalan otomatis mengikuti waktu lagu, atau merekam durasi lirik secara real-time pada menu Edit.</li>
                 <li><strong>Tab Message & Kartu Kenangan:</strong> Tempat membaca dan mengubah pesan khusus. Di sini tersedia tombol untuk membuka jendela <strong>Kartu Kenangan</strong>.</li>
-                <li><strong>Kartu Kenangan & Download:</strong> Di dalam pop-up Kartu Kenangan, foto otomatis tersinkronisasi, lengkap dengan nama pembuat. Kamu bisa men-download kartu menjadi gambar (.png) atau langsung mengirimkan pesan beserta foto hasil download ke WhatsApp.</li>
+                <li><strong>Kartu Kenangan & Download:</strong> Di dalam pop-up Kartu Kenangan, foto otomatis tersinkronisasi, lengkap dengan nama pembuat. Kamu bisa men-download kartu menjadi gambar (.png) atau video (.webm) lengkap dengan lirik dan lagunya, atau langsung mengirimkan pesan ke WhatsApp.</li>
             </ul>
         </div>
     </div>
@@ -888,7 +888,10 @@
             <!-- Tombol Aksi Download & WhatsApp -->
             <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 18px;">
                 <div class="top-btn long" onclick="downloadDedicationCard()" style="background: linear-gradient(135deg, rgba(var(--r), var(--g), var(--b), 0.6), rgba(var(--r), var(--g), var(--b), 0.3)); font-weight: 900; border: 1px solid rgba(255,255,255,0.3);">
-                    DOWNLOAD KARTU
+                    DOWNLOAD KARTU (GAMBAR)
+                </div>
+                <div class="top-btn long" onclick="startRecordingVideo()" id="record-video-btn" style="background: linear-gradient(135deg, rgba(var(--r), var(--g), var(--b), 0.8), rgba(255,255,255,0.2)); font-weight: 900; border: 1px solid rgba(255,255,255,0.4);">
+                    🎥 DOWNLOAD FULL VIDEO (LIRIK + MP3)
                 </div>
                 <div class="top-btn long" onclick="openWhatsApp()" style="font-weight: 800;">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="color: #25D366; flex-shrink: 0;">
@@ -1181,6 +1184,118 @@
         }).catch(err => {
             alert("Gagal mendownload kartu. Pastikan foto album bisa diakses.");
         });
+    }
+
+    let mediaRecorder;
+    let recordedChunks = [];
+
+    function startRecordingVideo() {
+        if (!window.MediaRecorder) {
+            alert("Maaf, browser Anda tidak mendukung perekaman video.");
+            return;
+        }
+
+        audio.currentTime = 0;
+        audio.play().catch(e => {});
+        startVisualizerAnimation();
+
+        const canvas = document.createElement('canvas');
+        canvas.width = 480;
+        canvas.height = 854;
+        const ctx = canvas.getContext('2d');
+
+        const videoBtn = document.getElementById('record-video-btn');
+        videoBtn.innerText = "🔴 SEDANG MEREKAM VIDEO...";
+        videoBtn.style.pointerEvents = 'none';
+
+        const stream = canvas.captureStream(30);
+        
+        try {
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const sourceNode = audioCtx.createMediaElementSource(audio);
+            const destNode = audioCtx.createMediaStreamDestination();
+            sourceNode.connect(destNode);
+            sourceNode.connect(audioCtx.destination);
+            
+            destNode.stream.getAudioTracks().forEach(track => {
+                stream.addTrack(track);
+            });
+        } catch(err) {
+            console.log("Audio capture note:", err);
+        }
+
+        recordedChunks = [];
+        mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
+
+        mediaRecorder.ondataavailable = function(event) {
+            if (event.data.size > 0) {
+                recordedChunks.push(event.data);
+            }
+        };
+
+        mediaRecorder.onstop = function() {
+            const blob = new Blob(recordedChunks, { type: 'video/webm' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = 'memory-archive-full-video.webm';
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(() => {
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+            }, 100);
+
+            videoBtn.innerText = "🎥 DOWNLOAD FULL VIDEO (LIRIK + MP3)";
+            videoBtn.style.pointerEvents = 'auto';
+            audio.pause();
+            stopVisualizerAnimation();
+        };
+
+        mediaRecorder.start();
+
+        const renderInterval = setInterval(() => {
+            const rootStyles = getComputedStyle(document.documentElement);
+            const r = rootStyles.getPropertyValue('--r').trim() || 50;
+            const g = rootStyles.getPropertyValue('--g').trim() || 40;
+            const b = rootStyles.getPropertyValue('--b').trim() || 70;
+
+            ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = "#ffffff";
+            ctx.font = "bold 24px 'Cinzel', serif";
+            ctx.fillText(document.getElementById('editable-title').innerText.replace(/\n/g, ' ').substring(0, 25), 30, 100);
+
+            ctx.font = "bold 14px 'Space Grotesk', sans-serif";
+            ctx.fillStyle = "rgba(255,255,255,0.7)";
+            ctx.fillText(document.getElementById('editable-artist').innerText, 30, 130);
+
+            let activeLyricText = "";
+            const activeEl = document.querySelector('.lyric-item.active-lyric');
+            if (activeEl) {
+                activeLyricText = activeEl.innerText;
+            }
+
+            ctx.font = "bold 22px 'Plus Jakarta Sans', sans-serif";
+            ctx.fillStyle = "#ffffff";
+            ctx.fillText(activeLyricText, 30, 420, 420);
+
+            if (audio.ended || audio.paused) {
+                clearInterval(renderInterval);
+                if(mediaRecorder && mediaRecorder.state !== "inactive") {
+                    mediaRecorder.stop();
+                }
+            }
+        }, 33);
+
+        setTimeout(() => {
+            if (mediaRecorder && mediaRecorder.state === "recording") {
+                mediaRecorder.stop();
+                clearInterval(renderInterval);
+            }
+        }, 35000);
     }
 
     function toggleCanvas() {
